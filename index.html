@@ -3367,6 +3367,11 @@ Answer Key
 
     // =================== Parser & Helpers ===================
     
+    // =================== Parser & Helpers ===================
+    
+    // --- FIX 2: ROBUST PARSER ---
+    // This parser now handles same-line options, multi-line options,
+    // and strips [source] tags from prompts.
     function parseQuestions(raw) {
       const cleanRaw = raw
         .replace(/\r\n/g, "\n")
@@ -3378,7 +3383,7 @@ Answer Key
       const keyText = parts[1] || "";
 
       const key = new Map();
-      keyText.split(/\n+/).forEach(line => { 
+      keyText.split(/\n+/).forEach(line => {
         const m = line.trim().match(/^(\d+)\.\s*([a-d])/i);
         if (m) key.set(Number(m[1]), m[2].toLowerCase());
       });
@@ -3387,7 +3392,7 @@ Answer Key
 
       const questions = [];
       for (const block of blocks) {
-        const firstLineMatch = block.match(/^(\d+)\.\s*(.*)$/s); 
+        const firstLineMatch = block.match(/^(\d+)\.\s*(.*)$/s);
         if (!firstLineMatch) continue;
         
         const qNum = Number(firstLineMatch[1]);
@@ -3401,16 +3406,53 @@ Answer Key
         let promptLine = lines[0];
         let optionLines = lines.slice(1);
         
+        // Check for same-line option
         const sameLineOptionMatch = promptLine.match(/^(.*?)\s+(?:\\s*)?(?:o\s+)?([a-dA-D])\s*\)\s*(.*)$/);
         
         if (sameLineOptionMatch) {
             prompt = sameLineOptionMatch[1].trim();
             const key = sameLineOptionMatch[2].toLowerCase();
             const text = sameLineOptionMatch[3].trim();
-            if (text || text === "") options.push({ key, text });
+            if (text || text === "") options.push({ key, text }); // Allow blank options
         } else {
             prompt = promptLine.trim();
         }
+
+        let lastOption = options.length > 0 ? options[options.length - 1] : null;
+
+        for (const line of optionLines) {
+          const trimmedLine = line.trim();
+          if (/^d\)\s*Option\s*D$/i.test(trimmedLine)) continue; // Skip artifacts
+
+          // Regex to find an option marker at the start of the line
+          const m = trimmedLine.match(/^\s*(?:\\s*)?(?:o\s+)?([a-dA-D])\s*\)\s*(.*)$/);
+          
+          if (m) {
+            // This line is a new option
+            const key = m[1].toLowerCase();
+            const text = m[2].trim();
+            
+            if (!options.some(o => o.key === key)) {
+              const newOpt = { key, text };
+              options.push(newOpt);
+              lastOption = newOpt;
+            }
+          } else if (lastOption) {
+            // This line is a continuation of the previous option
+            lastOption.text = (lastOption.text + ' ' + trimmedLine).trim();
+          }
+        }
+
+        // Clean up prompt (remove source tags) - THIS IS THE CORRECTED LINE
+        prompt = prompt.replace(/\/g, '').trim();
+
+        if (prompt && options.length >= 2) {
+          questions.push({ number: qNum, prompt, options, correct: key.get(qNum) || "a" });
+        }
+      }
+      return { questions };
+    }
+    // --- END FIX 2 ---
 
         let lastOption = options.length > 0 ? options[options.length - 1] : null;
 
@@ -3554,3 +3596,4 @@ Answer Key
   </script>
 </body>
 </html>
+
