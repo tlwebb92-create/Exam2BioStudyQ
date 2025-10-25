@@ -72,7 +72,7 @@ o b) Calvin cycle
 o c) Glycolysis
 o d) Fermentation
 
-9. The electron transport chain (In Plants) is located in the:
+9. The electron transport chain is located in the:
 o a) Cytoplasm
 o b) Thylakoid membrane
 o c) Nucleus
@@ -318,7 +318,7 @@ o b) Mesophyll
 o c) Guard cells
 o d) Phloem
 
-50. The process by which the most ATP is produced in both photosynthesis and cellular respiration is called:
+50. The process by which ATP is produced in both photosynthesis and cellular respiration is called:
 o a) Fermentation
 o b) Glycolysis
 o c) Chemiosmosis
@@ -958,8 +958,7 @@ Answer Key
       const [revealed, setRevealed] = useState(() => loadSaved("revealed", {}));
       const [shuffledOrder, setShuffledOrder] = useState(() => loadSaved("order", []));
       const [shuffle, setShuffle] = useState(() => loadSaved("shuffle", true));
-      const [autoAdvance, setAutoAdvance] = useState(() => loadSaved("autoAdvance", true));
-      // *** NEW STATE for shuffling options ***
+      // Removed autoAdvance state
       const [shuffleOptions, setShuffleOptions] = useState(() => loadSaved("shuffleOptions", false));
 
 
@@ -977,8 +976,7 @@ Answer Key
       useEffect(() => save("revealed", revealed), [revealed]);
       useEffect(() => save("order", shuffledOrder), [shuffledOrder]);
       useEffect(() => save("shuffle", shuffle), [shuffle]);
-      useEffect(() => save("autoAdvance", autoAdvance), [autoAdvance]);
-      // *** Persist shuffleOptions ***
+      // Removed autoAdvance persistence
       useEffect(() => save("shuffleOptions", shuffleOptions), [shuffleOptions]);
 
       if (!parsed.questions.length) {
@@ -999,9 +997,8 @@ Answer Key
       const isCorrect = value && value === q.correct;
       const shown = !!revealed[qIndex];
 
-      // *** Create displayed options based on shuffleOptions state ***
       const displayedOptions = useMemo(() => {
-        if (!q) return []; // Handle case where q might be temporarily undefined
+        if (!q) return []; 
         return shuffleOptions ? shuffleArray([...q.options]) : q.options;
       }, [q, shuffleOptions]);
 
@@ -1012,13 +1009,11 @@ Answer Key
       const onSubmit = () => {
         if (value) {
           setRevealed(r => ({ ...r, [qIndex]: true }));
-          // *** UPDATED auto-advance delay ***
-          if (autoAdvance) setTimeout(goNext, 5000); // 5 seconds
+          // Removed auto-advance setTimeout
         }
       };
 
       const onSelect = (opt) => {
-        // *** Prevent selection if already shown ***
         if (shown) return; 
         setAnswers(a => ({ ...a, [qIndex]: opt }));
       };
@@ -1036,7 +1031,6 @@ Answer Key
               
               <Toolbar>
                 <button className="btn" onClick={() => { setShuffle(s => !s); const base = [...parsed.questions.keys()]; const order = !shuffle ? shuffleArray(base) : base; setShuffledOrder(order); setCurrentIndex(0); }}>Shuffle Qs: {shuffle ? "On" : "Off"}</button>
-                {/* *** NEW Shuffle Options button *** */}
                 <button className="btn" onClick={() => setShuffleOptions(s => !s)}>Shuffle Options: {shuffleOptions ? "On" : "Off"}</button>
                 <button className="btn" onClick={() => { setAnswers({}); setRevealed({}); setCurrentIndex(0); }}>Reset</button>
                 <button className="btn" onClick={() => downloadState(parsed.questions, answers)}>Download results</button>
@@ -1052,7 +1046,6 @@ Answer Key
 
               <h2 className="text-xl font-semibold leading-tight mb-3">{q.prompt}</h2>
 
-              {/* *** Use displayedOptions here *** */}
               <div role="radiogroup" aria-label={`Choices for question ${currentIndex + 1}`} className="space-y-2">
                 {displayedOptions.map(opt => {
                   const id = `q${qIndex}_${opt.key}`;
@@ -1067,7 +1060,6 @@ Answer Key
                         name={`q_${qIndex}`}
                         checked={selected || false}
                         onChange={() => onSelect(opt.key)}
-                        // *** Disable input if answer shown ***
                         disabled={shown}
                       />
                       <span className="key">{opt.key.toUpperCase()}</span>
@@ -1079,9 +1071,9 @@ Answer Key
 
               <div className="flex flex-wrap gap-3 mt-4">
                 <button className="btn" onClick={goPrev} disabled={currentIndex === 0}>Prev</button>
-                <button className="btn primary" onClick={onSubmit} disabled={!value || shown}>{shown ? "Answered" : "Check answer"}</button> {/* Disable check if shown */}
+                <button className="btn primary" onClick={onSubmit} disabled={!value || shown}>{shown ? "Answered" : "Check answer"}</button> 
                 <button className="btn" onClick={goNext} disabled={currentIndex === total - 1}>Next</button>
-                <label className="ml-auto inline-flex items-center gap-2 text-sm"><input type="checkbox" checked={autoAdvance} onChange={e => setAutoAdvance(e.target.checked)} /> Auto‑advance on check</label>
+                {/* Removed auto-advance checkbox label */}
               </div>
 
               {/* SIMPLIFIED FEEDBACK SECTION */}
@@ -1099,19 +1091,36 @@ Answer Key
               <Card>
                 <h3 className="font-semibold mb-2">Progress</h3>
                 <div className="grid grid-cols-6 gap-2">
+                  {/* === MODIFIED PROGRESS GRID LOGIC === */}
                   {shuffledOrder.map((idx, i) => { 
                     const actualQuestion = parsed.questions[idx]; 
+                    const isCurrent = i === currentIndex;
+                    const isRevealed = !!revealed[idx]; // Check if this specific question index has been revealed
                     const answered = !!answers[idx];
-                    const correct = answers[idx] === actualQuestion?.correct;
+                    const correct = answered && answers[idx] === actualQuestion?.correct;
+
+                    // Determine color based on revealed status first
+                    let colorClass = "bg-slate-200"; // Default: unanswered or answered but not revealed
+                    if (isRevealed) {
+                        if (correct) {
+                            colorClass = "bg-emerald-200"; // Revealed and correct
+                        } else if (answered) { // Only show red if revealed AND answered incorrectly
+                            colorClass = "bg-rose-200"; // Revealed and wrong
+                        }
+                        // If revealed but not answered, stays slate-200
+                    }
+                    // If answered but not yet revealed, it stays slate-200
+
                     return (
                       <button key={idx} 
-                        className={`tiny ${i === currentIndex ? "ring-2 ring-blue-400" : ""} ${answered ? (correct ? "bg-emerald-200" : "bg-rose-200") : "bg-slate-200"}`}
+                        className={`tiny ${isCurrent ? "ring-2 ring-blue-400" : ""} ${colorClass}`}
                         title={`Q${actualQuestion?.number}`} 
                         onClick={() => goTo(i)}>
                         {i + 1} 
                       </button>
                     );
                   })}
+                  {/* === END MODIFIED PROGRESS GRID LOGIC === */}
                 </div>
               </Card>
 
@@ -1278,8 +1287,8 @@ Answer Key
           // Skip placeholder artifact lines
           if (/^d\)\s*Option\s*D$/i.test(trimmedLine)) continue;
 
-          // Simple regex: Find letter (a-d), parenthesis, then text
-          const m = trimmedLine.match(/^\s*o\s*([a-dA-D])\s*\)\s*(.*)$/);
+          // Simple regex: Find letter (a-d), parenthesis, then text, allowing 'o ' prefix
+          const m = trimmedLine.match(/^\s*(?:o\s+)?([a-dA-D])\s*\)\s*(.*)$/);
           
           if (m) {
             const key = m[1].toLowerCase();
@@ -1387,14 +1396,14 @@ Answer Key
       color:white; 
       border-color:#1d4ed8; /* blue-700 */
     }
-    .btn.primary:hover:not(:disabled) { /* Add :not(:disabled) */
+    .btn.primary:hover:not(:disabled) { 
       background:#1d4ed8; /* blue-700 */
       border-color:#1e40af; /* blue-800 */
     }
 
     .choice { display:flex; gap:.6rem; align-items:flex-start; border:1px solid #e2e8f0; padding:.6rem .75rem; border-radius:.75rem; cursor:pointer; }
-    .choice input:disabled { cursor: not-allowed; } /* Style for disabled radio */
-    .choice input:disabled + .key + span { opacity: 0.7; } /* Dim text for disabled */
+    .choice input:disabled { cursor: not-allowed; } 
+    .choice input:disabled + .key + span { opacity: 0.7; } 
     .choice .key { display:inline-block; min-width:1.5rem; text-align:center; font-weight:700; opacity:.7; }
     .choice.selected { border-color:#94a3b8; background:#f8fafc; }
     .choice.correct { border-color:#34d399; background:#ecfdf5; }
@@ -1403,45 +1412,12 @@ Answer Key
     .tiny { width:2rem; height:2rem; border-radius:.5rem; border:1px solid #cbd5e1; font-weight:700; }
     `;
 
-    // =================== Keyboard shortcuts ===================
-    function useKeyNav({ onPrev, onNext, onCheck, onPick }) {
-      useEffect(() => {
-        const onKey = (e) => {
-          // Allow keys only if input/textarea isn't focused
-          if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
-
-          if (e.key === "ArrowLeft") onPrev?.();
-          if (e.key === "ArrowRight") onNext?.();
-          if (e.key === "Enter") onCheck?.();
-          const map = { 1: "a", 2: "b", 3: "c", 4: "d" };
-          if (map[e.key]) onPick?.(map[e.key]);
-        };
-        window.addEventListener("keydown", onKey);
-        return () => window.removeEventListener("keydown", onKey);
-      }, [onPrev, onNext, onCheck, onPick]);
-    }
-
-    // Hook it up for the main app
-    function KeyboardBinder(props) {
-      useKeyNav(props);
-      return null;
-    }
 
     // 5. Find the root element and render the App
     const container = document.getElementById('root');
     const root = ReactDOM.createRoot(container);
-    root.render(<>
-        <KeyboardBinder 
-            onPrev={() => {/* Need access to goPrev */}} 
-            onNext={() => {/* Need access to goNext */}}
-            onCheck={() => {/* Need access to onSubmit */}}
-            onPick={(key) => {/* Need access to onSelect */}}
-        />
-        <App />
-    </>);
+    root.render(<App />);
 
   </script>
 </body>
 </html>
-
-
