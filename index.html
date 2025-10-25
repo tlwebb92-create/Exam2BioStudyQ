@@ -2997,11 +2997,7 @@ Answer Key
       const [answers, setAnswers] = useState(() => loadSaved("answers", {}));
       const [revealed, setRevealed] = useState(() => loadSaved("revealed", {}));
       
-      // --- FIX 1: CRASH FIX ---
-      // Removed loading 'order' from localStorage. It was stale and caused the crash.
-      // Order will be generated fresh on every load based on the selected questions.
       const [shuffledOrder, setShuffledOrder] = useState([]);
-      // --- END FIX 1 ---
 
       const [shuffle, setShuffle] = useState(() => loadSaved("shuffle", true));
       const [shuffleOptions, setShuffleOptions] = useState(() => loadSaved("shuffleOptions", false));
@@ -3044,7 +3040,6 @@ Answer Key
       useEffect(() => save("revealed", revealed), [revealed]);
       useEffect(() => save("shuffle", shuffle), [shuffle]);
       useEffect(() => save("shuffleOptions", shuffleOptions), [shuffleOptions]);
-      // --- FIX 1 (cont.): Removed save("order", ...) ---
 
       // --- RENDER LOGIC ---
 
@@ -3114,7 +3109,6 @@ Answer Key
       
       const summary = computeSummary(combinedData.questions, answers);
 
-      // This check prevents the error on the very first render, before useEffect runs
       if (!q) {
         return (
           <Wrap>
@@ -3373,9 +3367,6 @@ Answer Key
 
     // =================== Parser & Helpers ===================
     
-    // --- FIX 2: ROBUST PARSER ---
-    // This parser now handles same-line options, multi-line options,
-    // and strips [source] tags from prompts.
     function parseQuestions(raw) {
       const cleanRaw = raw
         .replace(/\r\n/g, "\n")
@@ -3410,14 +3401,13 @@ Answer Key
         let promptLine = lines[0];
         let optionLines = lines.slice(1);
         
-        // Check for same-line option
         const sameLineOptionMatch = promptLine.match(/^(.*?)\s+(?:\\s*)?(?:o\s+)?([a-dA-D])\s*\)\s*(.*)$/);
         
         if (sameLineOptionMatch) {
             prompt = sameLineOptionMatch[1].trim();
             const key = sameLineOptionMatch[2].toLowerCase();
             const text = sameLineOptionMatch[3].trim();
-            if (text || text === "") options.push({ key, text }); // Allow blank options
+            if (text || text === "") options.push({ key, text });
         } else {
             prompt = promptLine.trim();
         }
@@ -3426,13 +3416,11 @@ Answer Key
 
         for (const line of optionLines) {
           const trimmedLine = line.trim();
-          if (/^d\)\s*Option\s*D$/i.test(trimmedLine)) continue; // Skip artifacts
+          if (/^d\)\s*Option\s*D$/i.test(trimmedLine)) continue;
 
-          // Regex to find an option marker at the start of the line
           const m = trimmedLine.match(/^\s*(?:\\s*)?(?:o\s+)?([a-dA-D])\s*\)\s*(.*)$/);
           
           if (m) {
-            // This line is a new option
             const key = m[1].toLowerCase();
             const text = m[2].trim();
             
@@ -3442,12 +3430,11 @@ Answer Key
               lastOption = newOpt;
             }
           } else if (lastOption) {
-            // This line is a continuation of the previous option
             lastOption.text = (lastOption.text + ' ' + trimmedLine).trim();
           }
         }
 
-        // Clean up prompt (remove source tags)
+        // --- THIS IS THE FIXED LINE ---
         prompt = prompt.replace(/\/g, '').trim();
 
         if (prompt && options.length >= 2) { 
@@ -3456,7 +3443,6 @@ Answer Key
       }
       return { questions };
     }
-    // --- END FIX 2 ---
 
     function shuffleArray(arr) {
       const a = [...arr];
