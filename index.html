@@ -23,7 +23,7 @@
     // Single‑file interactive quiz app
 
     function App() {
-      // === MANUALLY REFORMATTED AND CLEANED RAW DATA BLOCK ===
+      // RAW Data Block (Cleaned Version)
       const RAW = `1. What is the primary function of photosynthesis?
 o a) Convert oxygen to carbon dioxide
 o b) Convert solar energy into chemical energy
@@ -959,6 +959,9 @@ Answer Key
       const [shuffledOrder, setShuffledOrder] = useState(() => loadSaved("order", []));
       const [shuffle, setShuffle] = useState(() => loadSaved("shuffle", true));
       const [autoAdvance, setAutoAdvance] = useState(() => loadSaved("autoAdvance", true));
+      // *** NEW STATE for shuffling options ***
+      const [shuffleOptions, setShuffleOptions] = useState(() => loadSaved("shuffleOptions", false));
+
 
       // initialize order
       useEffect(() => {
@@ -975,6 +978,8 @@ Answer Key
       useEffect(() => save("order", shuffledOrder), [shuffledOrder]);
       useEffect(() => save("shuffle", shuffle), [shuffle]);
       useEffect(() => save("autoAdvance", autoAdvance), [autoAdvance]);
+      // *** Persist shuffleOptions ***
+      useEffect(() => save("shuffleOptions", shuffleOptions), [shuffleOptions]);
 
       if (!parsed.questions.length) {
         return (
@@ -994,6 +999,12 @@ Answer Key
       const isCorrect = value && value === q.correct;
       const shown = !!revealed[qIndex];
 
+      // *** Create displayed options based on shuffleOptions state ***
+      const displayedOptions = useMemo(() => {
+        if (!q) return []; // Handle case where q might be temporarily undefined
+        return shuffleOptions ? shuffleArray([...q.options]) : q.options;
+      }, [q, shuffleOptions]);
+
       const goNext = () => setCurrentIndex(i => Math.min(i + 1, total - 1));
       const goPrev = () => setCurrentIndex(i => Math.max(i - 1, 0));
       const goTo = (i) => setCurrentIndex(Math.min(Math.max(0, i), total - 1));
@@ -1001,11 +1012,16 @@ Answer Key
       const onSubmit = () => {
         if (value) {
           setRevealed(r => ({ ...r, [qIndex]: true }));
-          if (autoAdvance) setTimeout(goNext, 350);
+          // *** UPDATED auto-advance delay ***
+          if (autoAdvance) setTimeout(goNext, 5000); // 5 seconds
         }
       };
 
-      const onSelect = (opt) => setAnswers(a => ({ ...a, [qIndex]: opt }));
+      const onSelect = (opt) => {
+        // *** Prevent selection if already shown ***
+        if (shown) return; 
+        setAnswers(a => ({ ...a, [qIndex]: opt }));
+      };
 
       const summary = computeSummary(parsed.questions, answers);
 
@@ -1019,23 +1035,26 @@ Answer Key
               />
               
               <Toolbar>
-                <button className="btn" onClick={() => { setShuffle(s => !s); const base = [...parsed.questions.keys()]; const order = !shuffle ? shuffleArray(base) : base; setShuffledOrder(order); setCurrentIndex(0); }}>Shuffle: {shuffle ? "On" : "Off"}</button>
+                <button className="btn" onClick={() => { setShuffle(s => !s); const base = [...parsed.questions.keys()]; const order = !shuffle ? shuffleArray(base) : base; setShuffledOrder(order); setCurrentIndex(0); }}>Shuffle Qs: {shuffle ? "On" : "Off"}</button>
+                {/* *** NEW Shuffle Options button *** */}
+                <button className="btn" onClick={() => setShuffleOptions(s => !s)}>Shuffle Options: {shuffleOptions ? "On" : "Off"}</button>
                 <button className="btn" onClick={() => { setAnswers({}); setRevealed({}); setCurrentIndex(0); }}>Reset</button>
                 <button className="btn" onClick={() => downloadState(parsed.questions, answers)}>Download results</button>
-                <span className="ml-auto text-sm opacity-75">Source: Combined_MCQs_DeDuplicated.txt — Questions & key.</span>
+                <span className="ml-auto text-sm opacity-75">Source: Combined_MCQs_DeDuplicated.txt</span>
               </Toolbar>
 
               <hr className="my-4" />
 
               <div className="flex items-center justify-between gap-3 mb-2">
-                <span className="pill">Question {currentIndex + 1} of {total}</span> {/* Will show 'of 132' */}
-                <span className="pill">Answered {summary.answered}/{total}</span> {/* Will show '/132' */}
+                <span className="pill">Question {currentIndex + 1} of {total}</span> 
+                <span className="pill">Answered {summary.answered}/{total}</span> 
               </div>
 
               <h2 className="text-xl font-semibold leading-tight mb-3">{q.prompt}</h2>
 
+              {/* *** Use displayedOptions here *** */}
               <div role="radiogroup" aria-label={`Choices for question ${currentIndex + 1}`} className="space-y-2">
-                {q.options.map(opt => {
+                {displayedOptions.map(opt => {
                   const id = `q${qIndex}_${opt.key}`;
                   const selected = value === opt.key;
                   const correct = q.correct === opt.key;
@@ -1048,6 +1067,8 @@ Answer Key
                         name={`q_${qIndex}`}
                         checked={selected || false}
                         onChange={() => onSelect(opt.key)}
+                        // *** Disable input if answer shown ***
+                        disabled={shown}
                       />
                       <span className="key">{opt.key.toUpperCase()}</span>
                       <span>{opt.text}</span>
@@ -1058,7 +1079,7 @@ Answer Key
 
               <div className="flex flex-wrap gap-3 mt-4">
                 <button className="btn" onClick={goPrev} disabled={currentIndex === 0}>Prev</button>
-                <button className="btn primary" onClick={onSubmit} disabled={!value}>{shown ? "Reveal again" : "Check answer"}</button>
+                <button className="btn primary" onClick={onSubmit} disabled={!value || shown}>{shown ? "Answered" : "Check answer"}</button> {/* Disable check if shown */}
                 <button className="btn" onClick={goNext} disabled={currentIndex === total - 1}>Next</button>
                 <label className="ml-auto inline-flex items-center gap-2 text-sm"><input type="checkbox" checked={autoAdvance} onChange={e => setAutoAdvance(e.target.checked)} /> Auto‑advance on check</label>
               </div>
@@ -1078,7 +1099,6 @@ Answer Key
               <Card>
                 <h3 className="font-semibold mb-2">Progress</h3>
                 <div className="grid grid-cols-6 gap-2">
-                  {/* Will map over 132 items */}
                   {shuffledOrder.map((idx, i) => { 
                     const actualQuestion = parsed.questions[idx]; 
                     const answered = !!answers[idx];
@@ -1204,19 +1224,13 @@ Answer Key
 
     // =================== Parser & Helpers ===================
     
-    // *** FINAL PARSER V5 - More forgiving option regex + Debugging ***
+    // Parser with manually cleaned data
     function parseQuestions(raw) {
-      // 1. Normalize newlines, spaces, and remove known problematic prefixes/lines
+      // 1. Normalize newlines, spaces
       const cleanRaw = raw
         .replace(/\r\n/g, "\n")
         .replace(/\r/g, "\n")
-        .replace(/[\u00A0\u200B\u202F\uFEFF]/g, " ") // Non-breaking spaces, etc.
-        .replace(/^Answer:\s+/gm, '') 
-        .replace(/^source:\s*/gmi, '')  // Remove "source:" prefix (case-insensitive, multiline)
-        .replace(/^Two\s+/gmi, '')      // Remove "Two " prefix
-        .replace(/^One\s+/gmi, '')      // Remove "One " prefix
-        .replace(/^to\s+/gmi, '')       // Remove "to " prefix
-        .replace(/^content:\s*/gmi, ''); // Remove "content:" prefix
+        .replace(/[\u00A0\u200B\u202F\uFEFF]/g, " ");
 
       // 2. Split answer key
       const parts = cleanRaw.split(/\s*\n\s*Answer Key\s*\n\s*=+\s*\n\s*/);
@@ -1240,79 +1254,60 @@ Answer Key
         const qNum = Number(first[1]);
         let rest = first[2].trim();
         const options = [];
-
-        // Logic for same-line option 'a' (Handles Q99-123 specifically)
-        const sameLineMatch = rest.match(/^(.*?)\s+([aA])\)\s*(.*)$/);
         let prompt;
         let optionLines;
 
-        if (sameLineMatch && !/^\s*o\s*a\)/i.test(rest) && qNum >= 99 && qNum <= 123) { // Be specific about when this applies
-          prompt = sameLineMatch[1].trim(); 
-          const text = sameLineMatch[3].trim(); 
-          if (text && text.toLowerCase() !== 'option a') { 
-            options.push({ key: 'a', text: text });
-          }
-          const otherLines = rest.split(/\n+/).slice(1);
-          optionLines = otherLines.map(l => l.trim()).filter(Boolean);
-        } else {
-          // Normal case for all other questions
-          const lines = rest.split(/\n+/).map(l => l.trim()).filter(Boolean);
-          if (lines.length === 0) continue;
-          prompt = lines[0];
-          optionLines = lines.slice(1);
+        // Split into lines
+        const lines = rest.split(/\n+/).map(l => l.trim()).filter(Boolean);
+        if (lines.length === 0) continue;
+        prompt = lines[0];
+        optionLines = lines.slice(1);
+
+        // Check if first line *also* contains option 'a' (for Q99-123)
+        const sameLineMatch = prompt.match(/^(.*?)\s+([aA])\)\s*(.*)$/);
+        if (sameLineMatch && qNum >= 99 && qNum <= 123) {
+           prompt = sameLineMatch[1].trim();
+           const text = sameLineMatch[3].trim();
+           if (text) options.push({ key: 'a', text });
         }
-       
+
+
         for (const line of optionLines) {
           const trimmedLine = line.trim();
           
           // Skip placeholder artifact lines
           if (/^d\)\s*Option\s*D$/i.test(trimmedLine)) continue;
 
-          // *** EVEN More flexible regex ***
-          // Looks for (a-d) followed by ), ignoring almost anything before it.
-          // ^         - Start of line/string
-          // .*?       - Any character (non-greedy) - this will match prefixes like "o ", "s o ", etc.
-          // ([a-dA-D]) - Capture group 1: the letter a, b, c, or d
-          // \s*\)\s* - A closing parenthesis, possibly surrounded by spaces
-          // (.*)      - Capture group 2: the rest of the line (the option text)
-          // $         - End of line/string
-          const m = trimmedLine.match(/^.*?([a-dA-D])\s*\)\s*(.*)$/);
+          // Simple regex: Find letter (a-d), parenthesis, then text
+          const m = trimmedLine.match(/^\s*o\s*([a-dA-D])\s*\)\s*(.*)$/);
           
           if (m) {
             const key = m[1].toLowerCase();
             const text = m[2].trim();
             
             // Add if text is valid and key not already added
-            if (text && text.toLowerCase() !== `option ${key}` && !options.some(o => o.key === key)) {
+            if (text && !options.some(o => o.key === key)) {
               options.push({ key, text });
             }
-          } else if (trimmedLine.length > 0 && !/^\d+\./.test(trimmedLine)) {
-             // *** DEBUGGING: Log lines that look like options but didn't match ***
-             // This checks if the line isn't empty and doesn't look like the start of a new question
-             if (/[a-dA-D]\)/.test(trimmedLine)) { // Does it contain something like "a)"?
-                console.log(`Parser issue: Could not parse option line for Q${qNum}:`, JSON.stringify(trimmedLine));
-             }
           }
         }
 
         // Add question if prompt exists and has >= 2 options
         if (prompt && options.length >= 2) { 
           questions.push({ number: qNum, prompt, options, correct: key.get(qNum) || "a" });
-        } else if (prompt) {
-           console.log(`Parser issue: Q${qNum} added with only ${options.length} options. Prompt: ${prompt}`);
         }
       }
 
       questions.sort((a, b) => a.number - b.number);
-      console.log(`Parsed ${questions.length} questions.`); // Log total count
       return { questions }; // Should contain 132 questions
     }
 
+    // Fisher-Yates shuffle algorithm
     function shuffleArray(arr) {
-      const a = [...arr];
+      const a = [...arr]; // Create a copy
       for (let i = a.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
+        [a[i], a[j]] = [a[j], a[i]]; // Swap elements
       }
       return a;
     }
@@ -1392,13 +1387,14 @@ Answer Key
       color:white; 
       border-color:#1d4ed8; /* blue-700 */
     }
-    .btn.primary:hover {
+    .btn.primary:hover:not(:disabled) { /* Add :not(:disabled) */
       background:#1d4ed8; /* blue-700 */
       border-color:#1e40af; /* blue-800 */
     }
 
     .choice { display:flex; gap:.6rem; align-items:flex-start; border:1px solid #e2e8f0; padding:.6rem .75rem; border-radius:.75rem; cursor:pointer; }
-    .choice input { margin-top:.25rem; }
+    .choice input:disabled { cursor: not-allowed; } /* Style for disabled radio */
+    .choice input:disabled + .key + span { opacity: 0.7; } /* Dim text for disabled */
     .choice .key { display:inline-block; min-width:1.5rem; text-align:center; font-weight:700; opacity:.7; }
     .choice.selected { border-color:#94a3b8; background:#f8fafc; }
     .choice.correct { border-color:#34d399; background:#ecfdf5; }
@@ -1411,6 +1407,9 @@ Answer Key
     function useKeyNav({ onPrev, onNext, onCheck, onPick }) {
       useEffect(() => {
         const onKey = (e) => {
+          // Allow keys only if input/textarea isn't focused
+          if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+
           if (e.key === "ArrowLeft") onPrev?.();
           if (e.key === "ArrowRight") onNext?.();
           if (e.key === "Enter") onCheck?.();
@@ -1431,7 +1430,15 @@ Answer Key
     // 5. Find the root element and render the App
     const container = document.getElementById('root');
     const root = ReactDOM.createRoot(container);
-    root.render(<App />);
+    root.render(<>
+        <KeyboardBinder 
+            onPrev={() => {/* Need access to goPrev */}} 
+            onNext={() => {/* Need access to goNext */}}
+            onCheck={() => {/* Need access to onSubmit */}}
+            onPick={(key) => {/* Need access to onSelect */}}
+        />
+        <App />
+    </>);
 
   </script>
 </body>
