@@ -3477,7 +3477,7 @@ Answer Key
         }
 
         // --- THIS IS THE FIXED LINE ---
-        prompt = prompt.replace(/\/g, '').trim();
+        prompt = prompt.replace(/\//g, '').trim();
 
         if (prompt && options.length >= 2) { 
           questions.push({ number: qNum, prompt, options, correct: key.get(qNum) || "a" });
@@ -3596,5 +3596,6 @@ Answer Key
   </script>
 </body>
 </html>
+
 
 
