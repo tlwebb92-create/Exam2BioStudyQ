@@ -3444,7 +3444,7 @@ Answer Key
         }
 
         // Clean up prompt (remove source tags) - THIS IS THE CORRECTED LINE
-        prompt = prompt.replace(/\/g, '').trim();
+        prompt = prompt.replace(/ \[ source : \d+ \] / g).trim();
 
         if (prompt && options.length >= 2) {
           questions.push({ number: qNum, prompt, options, correct: key.get(qNum) || "a" });
@@ -3596,4 +3596,5 @@ Answer Key
   </script>
 </body>
 </html>
+
 
