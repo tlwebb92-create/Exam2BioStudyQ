@@ -4737,8 +4737,8 @@ c
               />
               
               <Toolbar>
-                <button className="btn" onClick={handleShuffleToggle}>Shuffle Qs: {shuffle ? "On" : "Off"}</button>
-                <button className="btn" onClick={() => setShuffleOptions(s => !s)}>Shuffle Options: {shuffleOptions ? "On" : "Off"}</button>
+                <button className="btn" onClick={handleShuffleToggle}>Shuffle Questions: {shuffle ? "On" : "Off"}</button>
+                <button className="btn" onClick={() => setShuffleOptions(s => !s)}>Shuffle Answers: {shuffleOptions ? "On" : "Off"}</button>
                 <button className="btn" onClick={handleReset}>Reset Progress</button>
                 <button className="btn" onClick={() => downloadState(combinedData.questions, answers)}>Download results</button>
               </Toolbar>
@@ -5240,6 +5240,7 @@ c
   </script>
 </body>
 </html>
+
 
 
 
