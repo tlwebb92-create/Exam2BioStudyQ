@@ -5017,7 +5017,7 @@ c
         if (!block) continue;
 
         // Strip source tags from the entire block first
-        block = block.replace(/\/g, '').trim();
+        block = block.replace(/\//g, '').trim();
 
         // Match the question number and the rest of the block content
         const qNumMatch = block.match(/^(\d+)\.\s*(.*)/s); // /s flag to match across newlines
@@ -5232,3 +5232,4 @@ c
   </script>
 </body>
 </html>
+
