@@ -3,20 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BIO 210 Cell Cycle Review</title>
+  <title>BMCC - BIO 210 Review Repo</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
+
   <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useEffect, useMemo, useState } = React;
+    
+    // Pull React hooks from the global 'React' object
+    const { useEffect, useMemo, useRef, useState } = React;
+
+    // Single‑file interactive quiz app
 
     // =================== DATA ===================
+    // Added Lecture 10 and 11
     const DATA_SETS = {
       'l8_9': {
         title: 'Lecture 8-9: Mitosis, Meiosis & Cell Cycle',
@@ -372,18 +379,734 @@ Answer Key
 49. b
 50. b`
       },
+      'l10': {
+        title: 'Lecture 10: DNA Review',
+        raw: `1. What is the main topic of the document?
+o a) Protein synthesis
+o b) DNA as the genetic material and its structure
+o c) Lipid metabolism
+o d) Carbohydrate storage
+
+2. When was DNA first identified as "nuclein"?
+o a) 1869
+o b) 1928
+o c) 1940
+o d) 1952
+
+3. Who first isolated nucleic acids?
+o a) Frederick Griffith
+o b) Johannes Friedrich Miescher
+o c) Oswald Avery
+o d) Rosalind Franklin
+
+4. Which molecule was NOT considered a candidate for the heredity molecule?
+o a) Proteins
+o b) Nucleic acids
+o c) Oxygen
+o d) Water
+
+5. What is one criterion for the genetic material?
+o a) It must dissolve in water
+o b) It must store species-specific information
+o c) It must be made of lipids
+o d) It must be unstable
+
+6. What term describes the observable expression of genetic information?
+o a) Genotype
+o b) Phenotype
+o c) Nucleotide
+o d) Replication
+
+7. Why must the genetic material be stable?
+o a) To change frequently
+o b) To replicate with high fidelity
+o c) To dissolve easily
+o d) To avoid encoding information
+
+8. What allows genetic variability for evolution?
+o a) Replication
+o b) Mutations
+o c) Phenotype
+o d) Stability
+
+9. Which "clan" initially dominated the heredity debate?
+o a) Nucleic acids clan
+o b) Protein clan
+o c) Lipid clan
+o d) Carbohydrate clan
+
+10. Why did the protein clan argue proteins were the genetic material?
+o a) Proteins have only 4 components
+o b) Proteins are made of 20 amino acids, offering more complexity
+o c) Proteins cannot replicate
+o d) Proteins are less stable
+
+11. What analogy is used to argue DNA can store information with 4 bases?
+o a) Morse code
+o b) Binary code in computers
+o c) Alphabet letters
+o d) Telephone signals
+
+12. Who conducted the transformation experiment with bacteria in 1928?
+o a) Oswald Avery
+o b) Frederick Griffith
+o c) Rosalind Franklin
+o d) Erwin Chargaff
+
+13. In Griffith’s experiment, what did the S strain bacteria have that made them deadly?
+o a) A smooth capsule
+o b) A rough surface
+o c) Extra chromosomes
+o d) No DNA
+
+14. What happened when heat-killed S strain and live R strain were injected together?
+o a) Mice survived
+o b) Mice died due to transformation
+o c) No transformation occurred
+o d) R strain became heat-killed
+
+15. What enzyme prevented transformation in Avery’s experiment?
+o a) Protease
+o b) RNase
+o c) DNase
+o d) Lipase
+
+16. What did Avery conclude from his experiment?
+o a) Proteins are the genetic material
+o b) DNA is the genetic material
+o c) RNA is the genetic material
+o d) Carbohydrates transform bacteria
+
+17. What component of DNA did Avery link to the deadly capsule?
+o a) Sugar
+o b) Phosphate
+o c) Bases
+o d) Proteins
+
+18. What domains share DNA as a universal molecule?
+o a) Plants, Animals, Fungi
+o b) Bacteria, Archaea, Eukaryotes
+o c) Viruses, Bacteria, Plants
+o d) Archaea, Fungi, Animals
+
+19. What are the four bases in DNA?
+o a) A, C, G, U
+o b) A, T, C, G
+o c) A, T, U, G
+o d) C, G, T, U
+
+20. What sugar is found in DNA?
+o a) Ribose
+o b) Glucose
+o c) Deoxyribose
+o d) Fructose
+
+21. What is a nucleotide composed of?
+o a) Base + Sugar
+o b) Base + Sugar + Phosphate
+o c) Sugar + Phosphate
+o d) Base + Protein
+
+22. Who proposed a wrong triple-helix DNA model?
+o a) Linus Pauling
+o b) Phoebus Levene
+o c) Rosalind Franklin
+o d) James Watson
+
+23. According to Chargaff’s rules, what equals the amount of adenine (A)?
+o a) Cytosine (C)
+o b) Guanine (G)
+o c) Thymine (T)
+o d) Uracil (U)
+
+24. Which species has the highest CG content in the table?
+o a) Homo sapiens
+o b) Neurospora crassa
+o c) Escherichia coli
+o d) Bacillus subtilis
+
+25. What did Rosalind Franklin’s X-ray diffraction reveal about DNA?
+o a) It’s a single strand
+o b) It’s a helix
+o c) It has no bases
+o d) It’s circular
+
+26. What spacing did Franklin’s diffraction show between base pairs?
+o a) 2 nm
+o b) 0.34 nm
+o c) 3.4 nm
+o d) 10 nm
+
+27. What is the width of the DNA double helix?
+o a) 0.34 nm
+o b) 2 nm
+o c) 3.4 nm
+o d) 5 nm
+
+28. How many hydrogen bonds connect adenine (A) to thymine (T)?
+o a) 1
+o b) 2
+o c) 3
+o d) 4
+
+29. What does "anti-parallel" mean in DNA structure?
+o a) Strands run in the same direction
+o b) Strands are oriented in opposite directions
+o c) Strands are not connected
+o d) Strands lack bases
+
+30. Which model of DNA replication was confirmed by Meselson-Stahl?
+o a) Conservative
+o b) Dispersive
+o c) Semi-conservative
+o d) Random
+
+31. In DNA replication, what is the leading strand?
+o a) Discontinuous with fragments
+o b) Continuous duplication
+o c) Not replicated
+o d) Circular
+
+32. What are Okazaki fragments associated with?
+o a) Leading strand
+o b) Lagging strand
+o c) Helicase
+o d) Conservative model
+
+33. Which enzyme unwinds the DNA double helix?
+o a) DNA Polymerase
+o b) Ligase
+o c) Helicase
+o d) RNase
+
+34. What type of bond forms between nucleotides during replication?
+o a) Hydrogen bond
+o b) Phosphodiester bond
+o c) Peptide bond
+o d) Ionic bond
+
+35. What is released during DNA replication’s condensation reaction?
+o a) Oxygen
+o b) Water
+o c) Carbon dioxide
+o d) Nitrogen
+
+36. What shape is eukaryotic chromosomal DNA?
+o a) Circular
+o b) Linear
+o c) Spiral
+o d) Branched
+
+37. What shape is bacterial chromosomal DNA?
+o a) Linear
+o b) Circular
+o c) Double helix
+o d) Fragmented
+
+38. Where does bacterial DNA replication begin?
+o a) Termination site
+o b) Origin of replication
+o c) Replication fork
+o d) Capsule
+
+39. How many replication forks form in bacterial DNA replication?
+o a) 1
+o b) 2
+o c) 3
+o d) 4
+
+40. What process distributes chromosomes in bacteria?
+o a) Mitosis
+o b) Binary fission
+o c) Meiosis
+o d) Transformation
+
+41. What is horizontal gene transfer?
+o a) Transfer from parent to offspring
+o b) Transfer of new genes not from parents
+o c) Replication of circular DNA
+o d) Vertical fission
+
+42. In Griffith’s experiment, what transformed R bacteria?
+o a) Proteins
+o b) RNA
+o c) DNA from S bacteria
+o d) Carbohydrates
+
+43. What type of horizontal transfer occurred in Griffith’s experiment?
+o a) Conjugation
+o b) Transformation
+o c) Transduction
+o d) Binary fission
+
+44. What does transformation involve in bacteria?
+o a) Vertical gene transfer
+o b) Recombination of donor and recipient DNA
+o c) Mitotic division
+o d) RNA synthesis
+
+45. What can be transferred in bacterial transformation?
+o a) Chromosomal fragment or plasmid
+o b) Proteins only
+o c) Carbohydrates only
+o d) Lipids
+
+46. What did the S strain DNA encode in Griffith’s experiment?
+o a) Rough surface
+o b) Deadly capsule
+o c) Antibiotic resistance
+o d) Circular chromosome
+
+47. Who provided X-ray diffraction evidence for DNA’s structure?
+o a) Oswald Avery
+o b) Rosalind Franklin
+o c) Frederick Griffith
+o d) Erwin Chargaff
+
+48. What phase in eukaryotes involves DNA replication?
+o a) G1 phase
+o b) S phase
+o c) G2 phase
+o d) M phase
+
+49. What did Avery use to degrade DNA in his experiment?
+o a) Protease
+o b) DNase
+o c) RNase
+o d) Heat
+
+50. What strengthens DNA according to Chargaff’s findings?
+o a) Higher AT content
+o b) Higher CG content
+o c) Equal A and C
+o d) Fewer bases
+
+Answer Key
+b
+a
+b
+c
+b
+b
+b
+b
+b
+b
+b
+b
+a
+b
+c
+b
+c
+b
+b
+c
+b
+a
+c
+b
+b
+b
+b
+b
+b
+c
+b
+b
+c
+b
+b
+b
+b
+b
+b
+b
+b
+c
+b
+b
+a
+b
+b
+b
+b
+b
+`
+      },
+      'l11': {
+        title: 'Lecture 11: Gene Expression & Mutations',
+        raw: `1. What is the main topic of the document?
+o a) DNA replication
+o b) Gene expression and mutations
+o c) RNA degradation
+o d) Protein degradation
+
+2. What process converts DNA to RNA?
+o a) Translation
+o b) Transcription
+o c) Replication
+o d) Mutation
+
+3. What is the central dogma of biology?
+o a) DNA → RNA → Protein
+o b) Protein → RNA → DNA
+o c) RNA → DNA → Protein
+o d) Protein → DNA → RNA
+
+4. In mRNA, what base replaces thymine (T)?
+o a) Adenine (A)
+o b) Uracil (U)
+o c) Cytosine (C)
+o d) Guanine (G)
+
+5. Which strand of DNA is transcribed into mRNA?
+o a) Leading strand
+o b) Lagging strand
+o c) Both strands
+o d) Neither strand
+
+6. What is the start codon in mRNA?
+o a) UAA
+o b) AUG
+o c) UGA
+o d) UAG
+
+7. What role do proteins play in the body?
+o a) Energy storage
+o b) Structural support, enzymes, transport, etc.
+o c) Lipid synthesis
+o d) Water regulation
+
+8. Which protein is an example of a structural protein?
+o a) Insulin
+o b) Keratin
+o c) Hemoglobin
+o d) Amylase
+
+9. What sugar is found in RNA?
+o a) Deoxyribose
+o b) Ribose
+o c) Glucose
+o d) Fructose
+
+10. How many strands does RNA have?
+o a) Double
+o b) Single
+o c) Triple
+o d) None
+
+11. What type of RNA transfers amino acids to the ribosome?
+o a) rRNA
+o b) tRNA
+o c) mRNA
+o d) snRNA
+
+12. What is the function of rRNA?
+o a) Carries genetic code
+o b) Forms ribosome units
+o c) Transfers amino acids
+o d) Regulates transcription
+
+13. What is added to the 5’ end of eukaryotic mRNA?
+o a) Poly-A tail
+o b) Cap
+o c) Intron
+o d) Exon
+
+14. What process removes introns from mRNA?
+o a) Capping
+o b) Splicing
+o c) Tailing
+o d) Transcription
+
+15. Why do humans have more proteins than genes?
+o a) Alternative splicing
+o b) Extra DNA strands
+o c) Multiple genomes
+o d) RNA duplication
+
+16. What is a codon?
+o a) A single base
+o b) A pair of bases
+o c) A triplet of bases
+o d) A protein sequence
+
+17. How many possible codons are there?
+o a) 16
+o b) 64
+o c) 20
+o d) 4
+
+18. What is a characteristic of the genetic code?
+o a) Ambiguous
+o b) Degenerate
+o c) Non-functional
+o d) Single-coded
+
+19. How many stop codons are there?
+o a) 1
+o b) 3
+o c) 5
+o d) 61
+
+20. What amino acid starts translation?
+o a) Leucine
+o b) Methionine
+o c) Phenylalanine
+o d) Valine
+
+21. What site does the initiator tRNA occupy?
+o a) A-site
+o b) P-site
+o c) E-site
+o d) T-site
+
+22. What bond forms between amino acids during elongation?
+o a) Hydrogen bond
+o b) Peptide bond
+o c) Phosphodiester bond
+o d) Ionic bond
+
+23. What triggers termination in translation?
+o a) Start codon
+o b) Stop codon
+o c) tRNA binding
+o d) Ribosome assembly
+
+24. What enzyme is used in transcription?
+o a) DNA polymerase
+o b) RNA polymerase
+o c) Helicase
+o d) Ligase
+
+25. What nucleotides are used in transcription?
+o a) dNTPs
+o b) NTPs
+o c) rNTPs
+o d) tNTPs
+
+26. What is a promoter in transcription?
+o a) A stop signal
+o b) Where RNA polymerase starts
+o c) A splice site
+o d) A cap site
+
+27. What type of mutation changes one amino acid?
+o a) Nonsense
+o b) Missense
+o c) Frameshift
+o d) Sense
+
+28. What type of mutation introduces a stop codon?
+o a) Sense
+o b) Missense
+o c) Nonsense
+o d) Frameshift
+
+29. What disease is an example of a missense mutation?
+o a) Cystic fibrosis
+o b) Sickle cell disease
+o c) Huntington’s disease
+o d) Down syndrome
+
+30. What happens in a frameshift mutation?
+o a) One base is substituted
+o b) A base is added or removed, shifting the reading frame
+o c) A stop codon is removed
+o d) No change occurs
+
+31. Which disease is linked to frameshift mutations?
+o a) Sickle cell disease
+o b) Cystic fibrosis
+o c) Hemophilia
+o d) Turner syndrome
+
+32. What chemical mutagen alters adenine pairing?
+o a) Benzopyrene
+o b) Nitrous acid
+o c) Ethidium bromide
+o d) AZT
+
+33. What type of radiation causes thymine dimers?
+o a) Ionizing
+o b) Non-ionizing (UV)
+o c) Gamma rays
+o d) X-rays
+
+34. What can UV radiation lead to in humans?
+o a) Blood disorders
+o b) Skin cancer
+o c) Muscle wasting
+o d) Color blindness
+
+35. What can insert into a genome and cause mutations?
+o a) Proteins
+o b) Viruses or transposons
+o c) Carbohydrates
+o d) Lipids
+
+36. What is insertional inactivation?
+o a) Activation of a gene
+o b) Inactivation of a gene by insertion
+o c) Removal of a gene
+o d) Duplication of a gene
+
+37. What is the first criterion for genetic material?
+o a) It must mutate frequently
+o b) It stores species-specific information
+o c) It is unstable
+o d) It lacks a code
+
+38. What is the third criterion for genetic material?
+o a) It undergoes frequent changes
+o b) It is stable and replicates faithfully
+o c) It expresses as RNA only
+o d) It avoids mutations
+
+39. What regulates gene expression in specific tissues?
+o a) Housekeeping genes
+o b) Tissue-specific expression
+o c) Random mutations
+o d) Viral insertion
+
+40. What are housekeeping genes?
+o a) Expressed only in specific cells
+o b) Expressed continuously
+o c) Turned off by repressors
+o d) Involved in mutations
+
+41. What is added to the 3’ end of mRNA?
+o a) Cap
+o b) Poly-A tail
+o c) Intron
+o d) Exon
+
+42. What is the role of spliceosomes?
+o a) Add a cap
+o b) Remove introns
+o c) Synthesize proteins
+o d) Unwind DNA
+
+43. How many amino acids are coded by the genetic code?
+o a) 16
+o b) 20
+o c) 64
+o d) 61
+
+44. What is the codon for leucine?
+o a) UUU
+o b) UUG
+o c) AUG
+o d) UAA
+
+45. What stage involves peptide bond formation?
+o a) Initiation
+o b) Elongation
+o c) Termination
+o d) Transcription
+
+46. What releases the polypeptide in termination?
+o a) tRNA
+o b) Release factor
+o c) RNA polymerase
+o d) Helicase
+
+47. What is a sense mutation?
+o a) Changes amino acid
+o b) Introduces a stop codon
+o c) Has no effect on protein
+o d) Shifts the reading frame
+
+48. What is a doublet code limited to?
+o a) 4 amino acids
+o b) 16 amino acids
+o c) 64 amino acids
+o d) 20 amino acids
+
+49. What is an example of a structural protein?
+o a) Insulin
+o b) Collagen
+o c) Hemoglobin
+o d) Amylase
+
+50. What process is endergonic during protein synthesis?
+o a) Transcription
+o b) Translation
+o c) Peptide bond formation
+o d) RNA splicing
+
+Answer Key
+b
+b
+a
+b
+b
+b
+b
+b
+b
+b
+b
+b
+b
+b
+a
+c
+b
+b
+b
+b
+b
+b
+b
+b
+b
+b
+b
+c
+b
+b
+b
+b
+b
+b
+b
+b
+b
+b
+b
+b
+b
+b
+b
+b
+b
+b
+c
+b
+b
+c
+`
+      },
     };
     // =================== END DATA ===================
 
+
     function App() {
-      const [selectedSets, setSelectedSets] = useState({ 'l8_9': true });
-      const [answers, setAnswers] = useState({});
-      const [revealed, setRevealed] = useState({});
+      // --- STATE ---
+      // Default to L8-9 being checked, but now include all 3 sets
+      const [selectedSets, setSelectedSets] = useState(() => loadSaved("selectedSets", { 'l8_9': true, 'l10': false, 'l11': false }));
+      const [answers, setAnswers] = useState(() => loadSaved("answers", {}));
+      const [revealed, setRevealed] = useState(() => loadSaved("revealed", {}));
+      
       const [shuffledOrder, setShuffledOrder] = useState([]);
-      const [shuffle, setShuffle] = useState(true);
-      const [shuffleOptions, setShuffleOptions] = useState(false);
+
+      const [shuffle, setShuffle] = useState(() => loadSaved("shuffle", true));
+      const [shuffleOptions, setShuffleOptions] = useState(() => loadSaved("shuffleOptions", false));
       const [currentIndex, setCurrentIndex] = useState(0);
 
+      // --- PARSING LOGIC ---
       const combinedData = useMemo(() => {
         let questionText = [];
         let keyText = [];
@@ -393,27 +1116,72 @@ Answer Key
             const raw = DATA_SETS[key].raw;
             const parts = raw.split(/\s*Answer Key\s*\n/);
             questionText.push(parts[0] || "");
-            if (parts[1]) keyText.push(parts[1]);
+            if (parts[1]) {
+              keyText.push(parts[1]);
+            }
           }
         });
 
-        const combinedRaw = questionText.join('\n\n') + '\n\nAnswer Key\n' + keyText.join('\n');
+        // Re-combine for the single parser function
+        const combinedRaw = questionText.join('\n\n') + 
+                            '\n\nAnswer Key\n' + 
+                            keyText.join('\n');
+        
         const parsedResult = parseQuestions(combinedRaw);
         return parsedResult;
       }, [selectedSets]);
 
+      // --- EFFECTS ---
+      
       useEffect(() => {
-        const n = combinedData.questions.length;
-        const base = [...Array(n).keys()];
-        const order = shuffle ? shuffleArray(base) : base;
-        setShuffledOrder(order);
-        setCurrentIndex(0);
-      }, [combinedData.questions.length, shuffle]);
+        const numQuestions = combinedData.questions.length;
+        if (numQuestions > 0) {
+          const base = [...Array(numQuestions).keys()];
+          const order = shuffle ? shuffleArray(base) : base;
+          setShuffledOrder(order);
+          setCurrentIndex(0);
+        } else {
+          setShuffledOrder([]);
+          setCurrentIndex(0);
+        }
+      }, [combinedData.questions.length, shuffle]); 
+
+      useEffect(() => save("selectedSets", selectedSets), [selectedSets]);
+      useEffect(() => save("answers", answers), [answers]);
+      useEffect(() => save("revealed", revealed), [revealed]);
+      useEffect(() => save("shuffle", shuffle), [shuffle]);
+      useEffect(() => save("shuffleOptions", shuffleOptions), [shuffleOptions]);
+
+      // --- RENDER LOGIC ---
+
+      if (!combinedData.questions.length) {
+        return (
+          <Wrap>
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start">
+              <Card>
+                <Header title="BMCC - BIO 210 Review Repo" subtitle="Biology Questions" />
+                <p>No questions loaded. Please select one or more quiz sets from the sidebar.</p>
+              </Card>
+              <aside className="space-y-6">
+                <SetSelector
+                  selectedSets={selectedSets}
+                  setSelectedSets={setSelectedSets}
+                  setAnswers={setAnswers}
+                  setRevealed={setRevealed}
+                />
+              </aside>
+            </div>
+            <Footer />
+            <style>{styles}</style>
+          </Wrap>
+        );
+      }
 
       const total = combinedData.questions.length;
       const qIndex = shuffledOrder[currentIndex] ?? 0;
       const q = combinedData.questions[qIndex];
       const value = answers[qIndex];
+      const isCorrect = value && q && value === q.correct;
       const shown = !!revealed[qIndex];
 
       const displayedOptions = useMemo(() => {
@@ -421,53 +1189,93 @@ Answer Key
         return shuffleOptions ? shuffleArray([...q.options]) : q.options;
       }, [q, shuffleOptions]);
 
-      const isCorrect = value && q && value === q.correct;
-
+      // --- HANDLERS ---
       const goNext = () => setCurrentIndex(i => Math.min(i + 1, total - 1));
       const goPrev = () => setCurrentIndex(i => Math.max(i - 1, 0));
       const goTo = (i) => setCurrentIndex(Math.min(Math.max(0, i), total - 1));
-      const onSubmit = () => { if (value) setRevealed(r => ({ ...r, [qIndex]: true })); };
-      const onSelect = (opt) => { if (!shown) setAnswers(a => ({ ...a, [qIndex]: opt })); };
-      const handleReset = () => { setAnswers({}); setRevealed({}); setCurrentIndex(0); };
 
+      const onSubmit = () => {
+        if (value) {
+          setRevealed(r => ({ ...r, [qIndex]: true }));
+        }
+      };
+
+      const onSelect = (opt) => {
+        if (shown) return; 
+        setAnswers(a => ({ ...a, [qIndex]: opt }));
+      };
+
+      const handleReset = () => {
+        setAnswers({});
+        setRevealed({});
+        setCurrentIndex(0);
+        const base = [...Array(combinedData.questions.length).keys()];
+        const order = shuffle ? shuffleArray(base) : base;
+        setShuffledOrder(order);
+      };
+      
+      const handleShuffleToggle = () => {
+        setShuffle(s => !s);
+      };
+      
       const summary = computeSummary(combinedData.questions, answers);
 
-      if (!combinedData.questions.length) {
-        return (
+      if (!q) {
+         return (
           <Wrap>
-            <Card>
-              <Header title="BIO 210 Cell Cycle Review" subtitle="No questions loaded. Please select a quiz set." />
-            </Card>
+             <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start">
+               <Card>
+                  <Header title="BMCC - BIO 210 Review Repo" subtitle="Loading Questions..." />
+                  <p className="text-red-600">Error loading question {currentIndex + 1}. Please try resetting or selecting different sets.</p>
+               </Card>
+                <aside className="space-y-6">
+                 <SetSelector
+                    selectedSets={selectedSets}
+                    setSelectedSets={setSelectedSets}
+                    setAnswers={setAnswers}
+                    setRevealed={setRevealed}
+                 />
+                 <Card><h3 className="font-semibold">Progress</h3><p>...</p></Card>
+                 <Card><h3 className="font-semibold">Summary</h3><p>...</p></Card>
+               </aside>
+            </div>
+            <Footer />
             <style>{styles}</style>
           </Wrap>
         );
       }
 
+      // --- MAIN RENDER ---
       return (
         <Wrap>
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start">
             <Card>
-              <Header title="Cell Cycle Review" subtitle="Lecture 8-9: Mitosis & Meiosis" />
+              <Header
+                title="BMCC - BIO 210 Review Repo"
+                subtitle={`Biology Questions`}
+              />
+              
               <Toolbar>
-                <button className="btn" onClick={() => setShuffle(s => !s)}>Shuffle Questions: {shuffle ? "On" : "Off"}</button>
+                <button className="btn" onClick={handleShuffleToggle}>Shuffle Questions: {shuffle ? "On" : "Off"}</button>
                 <button className="btn" onClick={() => setShuffleOptions(s => !s)}>Shuffle Answers: {shuffleOptions ? "On" : "Off"}</button>
                 <button className="btn" onClick={handleReset}>Reset Progress</button>
+                <button className="btn" onClick={() => downloadState(combinedData.questions, answers)}>Download results</button>
               </Toolbar>
 
               <hr className="my-4" />
 
               <div className="flex items-center justify-between gap-3 mb-2">
-                <span className="pill">Question {currentIndex + 1} of {total}</span>
-                <span className="pill">Answered {summary.answered}/{total}</span>
+                <span className="pill">Question {currentIndex + 1} of {total}</span> 
+                <span className="pill">Answered {summary.answered}/{total}</span> 
               </div>
 
-              <h2 className="text-xl font-semibold leading-tight mb-3">{q?.prompt}</h2>
+              <h2 className="text-xl font-semibold leading-tight mb-3">{q?.prompt || 'Loading prompt...'}</h2>
 
               <div role="radiogroup" aria-label={`Choices for question ${currentIndex + 1}`} className="space-y-2">
-                {displayedOptions.map(opt => {
+                {(displayedOptions || []).map(opt => {
                   const id = `q${qIndex}_${opt.key}`;
                   const selected = value === opt.key;
-                  const correct = q.correct === opt.key;
+                  const correct = q?.correct === opt.key;
                   const showFeedback = shown && (selected || correct);
                   return (
                     <label key={opt.key} htmlFor={id} className={`choice ${selected ? "selected" : ""} ${showFeedback ? (correct ? "correct" : selected ? "wrong" : "") : ""}`}>
@@ -475,7 +1283,7 @@ Answer Key
                         type="radio"
                         id={id}
                         name={`q_${qIndex}`}
-                        checked={!!selected}
+                        checked={selected || false}
                         onChange={() => onSelect(opt.key)}
                         disabled={shown}
                       />
@@ -488,7 +1296,7 @@ Answer Key
 
               <div className="flex flex-wrap gap-3 mt-4">
                 <button className="btn" onClick={goPrev} disabled={currentIndex === 0}>Prev</button>
-                <button className="btn primary" onClick={onSubmit} disabled={!value || shown}>{shown ? "Answered" : "Check answer"}</button>
+                <button className="btn primary" onClick={onSubmit} disabled={!value || shown}>{shown ? "Answered" : "Check answer"}</button> 
                 <button className="btn" onClick={goNext} disabled={currentIndex === total - 1}>Next</button>
               </div>
 
@@ -502,48 +1310,66 @@ Answer Key
               )}
             </Card>
 
+            {/* --- SIDEBAR --- */}
             <aside className="space-y-6">
+              <SetSelector
+                selectedSets={selectedSets}
+                setSelectedSets={setSelectedSets}
+                setAnswers={setAnswers}
+                setRevealed={setRevealed}
+              />
+
               <Card>
                 <h3 className="font-semibold mb-2">Progress</h3>
-                {shuffledOrder.length > 0 ? (
-                  <div className="grid grid-cols-6 gap-2">
-                    {shuffledOrder.map((idx, i) => {
-                      const actualQuestion = combinedData.questions[idx];
-                      const isCurrent = i === currentIndex;
-                      const isRevealed = !!revealed[idx];
-                      const answered = !!answers[idx];
-                      const correct = answered && actualQuestion && answers[idx] === actualQuestion.correct;
+                 {shuffledOrder.length > 0 ? (
+                    <div className="grid grid-cols-6 gap-2">
+                    {shuffledOrder.map((idx, i) => { 
+                        const actualQuestion = combinedData.questions[idx]; 
+                        const isCurrent = i === currentIndex;
+                        const isRevealed = !!revealed[idx];
+                        const answered = !!answers[idx];
+                        const correct = answered && actualQuestion && answers[idx] === actualQuestion.correct;
 
-                      let colorClass = "bg-slate-200";
-                      if (isRevealed) colorClass = correct ? "bg-emerald-200" : "bg-rose-200";
+                        let colorClass = "bg-slate-200";
+                        if (isRevealed) {
+                            if (correct) {
+                                colorClass = "bg-emerald-200";
+                            } else if (answered) {
+                                colorClass = "bg-rose-200";
+                            }
+                        }
 
-                      return (
-                        <button
-                          key={`${idx}-${i}`}
-                          className={`tiny ${isCurrent ? "ring-2 ring-blue-400" : ""} ${colorClass}`}
-                          title={`Q${actualQuestion?.number ?? (idx + 1)}`}
-                          onClick={() => goTo(i)}
-                        >
-                          {i + 1}
+                        return (
+                        <button key={`${idx}-${i}`}
+                            className={`tiny ${isCurrent ? "ring-2 ring-blue-400" : ""} ${colorClass}`}
+                            title={`Q${actualQuestion?.number ?? (idx + 1)}`} 
+                            onClick={() => goTo(i)}>
+                            {i + 1} 
                         </button>
-                      );
+                        );
                     })}
-                  </div>
-                ) : <p>Loading progress...</p>}
+                    </div>
+                 ) : (
+                    <p>Loading progress...</p>
+                 )}
               </Card>
 
               <Card>
                 <h3 className="font-semibold mb-2">Summary</h3>
                 <ul className="text-sm space-y-1">
-                  <li>Answered: {summary.answered} / {total}</li>
+                  <li>Answered: {summary.answered} / {total}</li> 
                   <li>Correct: {summary.correct}</li>
                   <li>Score: {total > 0 ? Math.round(summary.score * 100) : 0}%</li>
                 </ul>
+                <button className="btn w-full mt-3" onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" })}>View full review</button>
               </Card>
             </aside>
           </div>
 
+          <Review questions={combinedData.questions} answers={answers} />
+
           <Footer />
+
           <style>{styles}</style>
         </Wrap>
       );
@@ -557,20 +1383,132 @@ Answer Key
         </div>
       );
     }
+
     function Header({ title, subtitle }) {
       return (
-        <header className="space-y-1 mb-4">
+        <header className="space-y-1 mb-4"> 
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{title}</h1>
           <p className="opacity-80">{subtitle}</p>
         </header>
       );
     }
+
     function Card({ children }) {
-      return <section className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6">{children}</section>;
+      return (
+        <section className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6">{children}</section>
+      );
     }
-    function Toolbar({ children }) { return <div className="flex items-center gap-3 flex-wrap">{children}</div>; }
+    
+    function SetSelector({ selectedSets, setSelectedSets, setAnswers, setRevealed }) {
+      const handleSetChange = (key) => {
+        setSelectedSets(s => {
+          const newSets = { ...s, [key]: !s[key] };
+          
+          const atLeastOneChecked = Object.values(newSets).some(v => v === true);
+          if (!atLeastOneChecked) {
+             return s; 
+          }
+          
+          setAnswers({}); 
+          setRevealed({});
+          return newSets;
+        });
+      };
+
+      return (
+        <Card>
+          <h3 className="font-semibold mb-3">Available Quiz Sets</h3>
+          <div className="flex flex-col gap-2">
+            {Object.keys(DATA_SETS).map(key => (
+              <label key={key} className="flex items-center gap-2 cursor-pointer p-2 rounded-md hover:bg-slate-50">
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+                  checked={!!selectedSets[key]}
+                  onChange={() => handleSetChange(key)}
+                />
+                <span className="text-sm font-medium">{DATA_SETS[key].title}</span>
+              </label>
+            ))}
+          </div>
+        </Card>
+      );
+    }
+
+
+    function Toolbar({ children }) {
+      return (
+        <div className="flex items-center gap-3 flex-wrap">{children}</div>
+      );
+    }
+
+    function Review({ questions, answers }) {
+        if (!Array.isArray(questions) || questions.length === 0) return null;
+
+        const misses = questions
+            .map((q, idx) => ({ q, idx }))
+            .filter(({ q, idx }) => q && answers[idx] && answers[idx] !== q.correct);
+
+        return (
+            <Card>
+            <h3 className="text-lg font-semibold mb-3">End Review</h3>
+            <p className="text-sm opacity-80 mb-4">Missed questions are listed first with correct answers.</p>
+
+            {misses.length === 0 ? (
+                <p className="text-emerald-700">No misses — great work.</p>
+            ) : null}
+
+            <ol className="space-y-4 list-decimal list-inside">
+                {misses.map(({ q, idx }) => (
+                <li key={q?.number ?? idx}> 
+                    <div className="font-medium">Q{q?.number ?? (idx + 1)}. {q?.prompt}</div>
+                    <div className="pl-5 text-sm">
+                    <div className="mb-1">Your answer: <span className="font-semibold">{answers[idx]?.toUpperCase()}</span> — {getOptionText(q, answers[idx])}</div>
+                    <div className="mb-1">Correct: <span className="font-semibold">{q?.correct?.toUpperCase()}</span> — {getOptionText(q, q.correct)}</div>
+                    </div>
+                </li>
+                ))}
+            </ol>
+
+            <hr className="my-4" />
+            <details>
+                <summary className="cursor-pointer select-none">Show all questions and answers</summary>
+                <ol className="mt-3 space-y-4 list-decimal list-inside">
+                {questions.map((q, idx) => (
+                    q && (
+                        <li key={q.number ?? idx}>
+                            <div className="font-medium">Q{q.number ?? (idx + 1)}. {q.prompt}</div>
+                            {Array.isArray(q.options) && (
+                                <ul className="pl-5 text-sm list-disc">
+                                {q.options.map(o => (
+                                    <li key={o.key} className={o.key === q.correct ? "font-semibold" : ""}>
+                                    {o.key.toUpperCase()}) {o.text}
+                                    </li>
+                                ))}
+                                </ul>
+                            )}
+                            <div className="pl-5 text-sm opacity-80">Answer: {q.correct?.toUpperCase()}</div>
+                        </li>
+                    )
+                ))}
+                </ol>
+            </details>
+            </Card>
+        );
+    }
+
+
+    function Footer() {
+      return (
+        <footer className="text-xs opacity-70 text-center py-6">
+          Built for spaced practice and rapid review.
+        </footer>
+      );
+    }
 
     // =================== Parser & Helpers ===================
+    
+    // --- FINAL ROBUST PARSER ---
     function parseQuestions(raw) {
       const cleanRaw = raw
         .replace(/\r\n/g, "\n")
@@ -582,68 +1520,107 @@ Answer Key
         .replace(/\u2026/g, '...')
         .replace(/[\u00A0\u200B\u202F\uFEFF]/g, " ");
 
+      // Split body from answer key
       const parts = cleanRaw.split(/\s*Answer Key\s*\n/);
       const body = parts[0] || "";
       const keyText = parts[1] || "";
 
       const key = new Map();
       if (keyText) {
-        let sequentialIndex = 1;
-        keyText.split(/\n+/).forEach(line => {
-          const trimmed = line.trim();
-          const m = trimmed.match(/^(\d+)\.\s*([a-d])/i) || trimmed.match(/^([a-d])/i);
-          if (m) {
-            const letter = m[m.length - 1].toLowerCase();
-            if (m[1] && !isNaN(parseInt(m[1]))) key.set(parseInt(m[1]), letter);
-            else key.set(sequentialIndex, letter);
-            sequentialIndex++;
-          }
-        });
+          // Robustly handle sequential answers, whether listed as 'a', '1. a', or just 'a'
+          let sequentialIndex = 1;
+          keyText.split(/\n+/).forEach(line => {
+             const trimmedLine = line.trim();
+             // Match format like: '1. b', '23. c', or just 'b' (if sequential)
+             const match = trimmedLine.match(/^(\d+)\.\s*([a-d])/i) || trimmedLine.match(/^([a-d])$/i);
+             
+             if (match) {
+                 const answerLetter = match[match.length - 1].toLowerCase();
+                 // If it matched the numbered format (match[1] is the number)
+                 if (match[1] && !isNaN(parseInt(match[1]))) {
+                     key.set(parseInt(match[1]), answerLetter);
+                 } else {
+                     // Assume sequential numbering if no number is matched
+                     key.set(sequentialIndex, answerLetter);
+                 }
+                 sequentialIndex++;
+             }
+          });
       }
 
+      // Split into potential question blocks using the question number pattern
       const blocks = body.split(/\n\s*(?=\d+\.)/);
+      
       const questions = [];
-      const optionMarkerRegex = /\s*o\s+([a-d])\)/i;
+
+      // Regex to find "o a)", "o b)", "o c)", or "o d)"
+      const optionMarkerRegex = /\s*o\s+([a-d])\)/i; // 'i' insensitive
 
       for (let block of blocks) {
         block = block.trim();
         if (!block) continue;
 
-        // FIX: strip bracketed source tags safely
-        block = block.replace(/【[^】]*】/g, '').trim();
+        // Strip source tags from the entire block first
+        // FIX: remove any bracketed source tags like 【...】
+        block = block.replace(/【[^】]*】/g, '').trim(); 
 
-        const qNumMatch = block.match(/^(\d+)\.\s*(.*)/s);
+        // Match the question number and the rest of the block content
+        const qNumMatch = block.match(/^(\d+)\.\s*(.*)/s); // /s flag to match across newlines
         if (!qNumMatch) continue;
 
         const qNum = parseInt(qNumMatch[1], 10);
         let content = qNumMatch[2].trim();
-
+        
         let promptText = '';
         const options = [];
 
+        // Find the index of the first option marker
         const firstOptionIndex = content.search(optionMarkerRegex);
 
         if (firstOptionIndex !== -1) {
-          promptText = content.substring(0, firstOptionIndex).trim();
-          const optionsString = content.substring(firstOptionIndex);
-          const fullOptionRegex = /\s*o\s+([a-d])\)\s*(.*?)(?=\s*o\s+[a-d]\)|\s*$)/gis;
-          let match;
-          while ((match = fullOptionRegex.exec(optionsString)) !== null) {
-            options.push({ key: match[1].toLowerCase(), text: match[2].trim() });
-          }
+            // The text before the first option marker is the prompt
+            promptText = content.substring(0, firstOptionIndex).trim();
+            
+            // The rest is the options string
+            const optionsString = content.substring(firstOptionIndex);
+            
+            // Re-run regex over options string to find all options and their text
+            // Look for "o [a-d])" followed by non-option characters or end of string
+            const fullOptionRegex = /\s*o\s+([a-d])\)\s*(.*?)(?=\s*o\s+[a-d]\)|\s*$)/gis; // Added 's' and 'i' flags
+            let match;
+            
+            while ((match = fullOptionRegex.exec(optionsString)) !== null) {
+                options.push({
+                    key: match[1].toLowerCase(),
+                    text: match[2].trim()
+                });
+            }
         } else {
-          promptText = content;
+            // If no options found, the whole block content is the prompt
+            promptText = content;
         }
 
         if (promptText && options.length >= 2) {
-          options.sort((a, b) => a.key.localeCompare(b.key));
-          questions.push({ number: qNum, prompt: promptText, options, correct: key.get(qNum) || '' });
+            // Re-sort options by key (a, b, c, d)
+            options.sort((a, b) => a.key.localeCompare(b.key));
+            
+            questions.push({
+                number: qNum,
+                prompt: promptText,
+                options: options,
+                correct: key.get(qNum) || ''
+            });
         }
       }
 
+      // Final numerical sort for display order consistency
+      // This is now redundant since we parse by number, but good to keep
       questions.sort((a, b) => a.number - b.number);
+
       return { questions };
     }
+    // --- END FINAL ROBUST PARSER ---
+
 
     function shuffleArray(arr) {
       const a = [...arr];
@@ -654,6 +1631,22 @@ Answer Key
       return a;
     }
 
+    function save(k, v) {
+      try { localStorage.setItem("quiz_" + k, JSON.stringify(v)); } catch {}
+    }
+    function loadSaved(k, fallback) {
+      try { 
+          const s = localStorage.getItem("quiz_" + k); 
+          if (s && s !== 'undefined' && s !== 'null') {
+              return JSON.parse(s);
+          }
+          return fallback;
+      } catch (e) {
+          return fallback; 
+      }
+    }
+
+
     function getOptionText(q, key) {
       const o = q?.options?.find(o => o.key === key);
       return o?.text || "";
@@ -661,9 +1654,12 @@ Answer Key
 
     function computeSummary(questions, answers) {
       let answered = 0, correct = 0;
+      if (!Array.isArray(questions)) {
+          return { answered: 0, correct: 0, score: 0 };
+      }
       questions.forEach((q, idx) => {
-        const a = answers[idx];
-        if (a) {
+        const a = answers[idx]; 
+        if (a && q) { 
           answered++;
           if (a === q.correct) correct++;
         }
@@ -672,32 +1668,116 @@ Answer Key
       return { answered, correct, score };
     }
 
-    const styles = `
-    :root { --txt:#0f172a; --muted:#64748b; --brand:#2563eb; }
-    * { box-sizing: border-box; }
-    body { margin: 0; }
-    .btn { border:1px solid #d1d5db; background:#f3f4f6; padding:.5rem .8rem; border-radius:.75rem; font-weight:600; cursor:pointer; font-size:.875rem; }
-    .btn:hover:not(:disabled){ border-color:#9ca3af; background:#e5e7eb; }
-    .btn:disabled{ opacity:.5; cursor:not-allowed; }
-    .btn.primary{ background:#2563eb; color:white; border-color:#1d4ed8; }
-    .btn.primary:hover:not(:disabled){ background:#1d4ed8; border-color:#1e40af; }
-    .choice{ display:flex; gap:.6rem; align-items:flex-start; border:1px solid #e2e8f0; padding:.6rem .75rem; border-radius:.75rem; cursor:pointer; }
-    .choice:hover{ background:#f8fafc; }
-    .choice .key{ min-width:1.5rem; text-align:center; font-weight:700; opacity:.7; }
-    .choice.selected{ border-color:#94a3b8; background:#f1f5f9; }
-    .choice.correct{ border-color:#34d399; background:#ecfdf5; }
-    .choice.wrong{ border-color:#fca5a5; background:#fff1f2; }
-    .pill{ font-size:.8rem; padding:.15rem .5rem; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:999px; }
-    .tiny{ width:2rem; height:2rem; border-radius:.5rem; border:1px solid #cbd5e1; font-weight:600; font-size:.75rem; display:flex; align-items:center; justify-content:center; }
-    `;
+    function downloadState(questions, answers) {
+        if (!Array.isArray(questions)) {
+            alert("No questions loaded to download results.");
+            return;
+        }
 
-    function Footer() {
-      return <footer className="text-xs opacity-70 text-center py-6">Built for spaced practice and rapid review.</footer>;
+        const misses = [];
+        questions.forEach((q, idx) => {
+            if (q && answers[idx] && answers[idx] !== q.correct) {
+                misses.push(idx);
+            }
+        });
+
+        const lines = [];
+        const correctCount = questions.reduce((count, q, idx) => {
+            return count + (q && answers[idx] === q.correct ? 1 : 0);
+        }, 0);
+        const score = Math.round((questions.length > 0 ? correctCount / questions.length : 0) * 100);
+
+        lines.push(`Score: ${score}%`);
+        lines.push(`Correct: ${correctCount} / ${questions.length}`);
+        lines.push("");
+        lines.push("Missed Questions:");
+        
+        if (misses.length === 0) {
+            lines.push("None - Great work!");
+        } else {
+            misses.forEach(idx => {
+                const q = questions[idx];
+                if (q) {
+                    lines.push(`Q${q.number ?? (idx + 1)}. ${q.prompt}`); 
+                    lines.push(`  Your answer: ${(answers[idx] || "").toUpperCase()} — ${getOptionText(q, answers[idx])}`);
+                    lines.push(`  Correct: ${q.correct?.toUpperCase()} — ${getOptionText(q, q.correct)}`);
+                    lines.push("");
+                }
+            });
+        }
+        
+        try {
+            const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url; 
+            a.download = "quiz_results.txt"; 
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        } catch (e) {
+            alert("Could not download results. See console for details.");
+        }
     }
 
+
+    // =================== Styles ===================
+    const styles = `
+    :root { --txt: #0f172a; --muted:#64748b; --brand:#2563eb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    
+    .btn { 
+      appearance:none; 
+      border:1px solid #d1d5db;
+      background:#f3f4f6;
+      padding:.5rem .8rem;
+      border-radius:.75rem;
+      font-weight:600;
+      cursor:pointer;
+      transition: background-color 0.2s, border-color 0.2s;
+      font-size: 0.875rem;
+      white-space: nowrap;
+    }
+    .btn:hover:not(:disabled) {
+      border-color:#9ca3af;
+      background:#e5e7eb;
+    }
+    .btn:disabled { opacity:.5; cursor:not-allowed; }
+    .btn.primary {
+      background:#2563eb;
+      color:white;
+      border-color:#1d4ed8;
+    }
+    .btn.primary:hover:not(:disabled) {
+      background:#1d4ed8;
+      border-color:#1e40af;
+    }
+
+    .choice { display:flex; gap:.6rem; align-items:flex-start; border:1px solid #e2e8f0; padding:.6rem .75rem; border-radius:.75rem; cursor:pointer; transition: background-color 0.1s, border-color 0.1s; }
+    .choice:hover { background-color: #f8fafc; }
+    .choice input[type="radio"] { margin-top: 0.2rem; flex-shrink: 0; }
+    .choice input:disabled { cursor: not-allowed; }
+    .choice input:disabled + .key + span { opacity: 0.7; }
+    .choice .key { display:inline-block; min-width:1.5rem; text-align:center; font-weight:700; opacity:.7; flex-shrink: 0; }
+    .choice span:last-child { word-break: break-word; }
+    .choice.selected { border-color:#94a3b8; background:#f1f5f9; }
+    .choice.correct { border-color:#34d399; background:#ecfdf5; }
+    .choice.wrong { border-color:#fca5a5; background:#fff1f2; }
+    
+    .pill { font-size:.8rem; padding:.15rem .5rem; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:999px; white-space: nowrap; }
+    .tiny { width:2rem; height:2rem; border-radius:.5rem; border:1px solid #cbd5e1; font-weight:600; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; transition: background-color 0.1s, border-color 0.1s; }
+    .tiny:hover:not(.ring-2) { background-color: #e2e8f0; }
+    .tiny.ring-2 { border-color: #60a5fa; }
+    `;
+
+
+    // 5. Find the root element and render the App
     const container = document.getElementById('root');
     const root = ReactDOM.createRoot(container);
     root.render(<App />);
+
   </script>
 </body>
 </html>
