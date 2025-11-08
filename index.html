@@ -23,8 +23,401 @@
     // Single‑file interactive quiz app
 
     // =================== DATA ===================
-    // Added Lecture 10 and 11
     const DATA_SETS = {
+      'L9': { name: "Lab 9: Mitosis & Meiosis", title: "Lab 9: Mitosis & Meiosis", raw: `Lab 9 Questions
+
+1.  What is the primary activity during the G₁ phase of the cell cycle?
+    a) DNA replication
+    b) Cell growth and resource accumulation
+    c) Chromosome separation
+    d) Cytokinesis
+
+2.  During which phase of the cell cycle does DNA replication occur?
+    a) G₁
+    b) S
+    c) G₂
+    d) Mitosis
+
+3.  What happens to chromosomes by the end of S phase?
+    a) They condense into X-shapes
+    b) They consist of two identical sister chromatids
+    c) They separate into daughter cells
+    d) They decondense in the nucleus
+
+4.  What is the purpose of the G₂ checkpoint?
+    a) To initiate DNA replication
+    b) To ensure DNA fidelity and division readiness
+    c) To trigger cytokinesis
+    d) To condense chromosomes
+
+5.  Which proteins regulate the eukaryotic cell cycle?
+    a) Histones
+    b) Cyclins
+    c) Actin fibers
+    d) Centromeres
+
+6.  What phase do nerve and muscle cells enter when they rarely divide?
+    a) G₁
+    b) S
+    c) G₀
+    d) G₂
+
+7.  What determines if a cell enters S phase from G₁?
+    a) Size, nutrients, and space availability
+    b) Spindle fiber formation
+    c) Cytokinesis completion
+    d) Nuclear envelope breakdown
+
+8.  How many chromatids does a chromosome have at the end of G₁?
+    a) One
+    b) Two
+    c) Four
+    d) None
+
+9.  What is the total duration of the cell cycle in an onion root tip?
+    a) 90 minutes
+    b) 720 minutes
+    c) 24 hours
+    d) 48 hours
+
+10. What happens if a cell fails the G₂ checkpoint?
+    a) It proceeds to mitosis
+    b) It enters G₀
+    c) It does not divide
+    d) It replicates DNA again
+
+11. What is the main purpose of mitosis in multicellular organisms?
+    a) Gamete production
+    b) Growth and tissue repair
+    c) Genetic recombination
+    d) Reduction of chromosome number
+
+12. During which stage of mitosis do chromosomes align at the cell’s equator?
+    a) Prophase
+    b) Metaphase
+    c) Anaphase
+    d) Telophase
+
+13. What structure pulls sister chromatids apart in anaphase?
+    a) Centrioles
+    b) Spindle fibers
+    c) Cleavage furrow
+    d) Cell plate
+
+14. How do animal cells complete cytokinesis?
+    a) By forming a cell plate
+    b) By cinching a cleavage furrow
+    c) By replicating centrioles
+    d) By fusing vesicles
+
+15. What forms between daughter cells in plant cells during cytokinesis?
+    a) Cleavage furrow
+    b) Spindle fibers
+    c) Cell plate
+    d) Actin ring
+
+16. At the end of mitosis, how many daughter cells are produced?
+    a) 1
+    b) 2
+    c) 4
+    d) 8
+
+17. What happens to the nuclear envelope during prophase?
+    a) It reforms
+    b) It breaks down
+    c) It doubles in size
+    d) It aligns chromosomes
+
+18. What is the ploidy of daughter cells after mitosis in a diploid organism?
+    a) Haploid (1N)
+    b) Diploid (2N)
+    c) Triploid (3N)
+    d) Tetraploid (4N)
+
+19. In the onion root tip activity, how long does mitosis (prophase to telophase) take?
+    a) 90 minutes
+    b) 720 minutes
+    c) 12 hours
+    d) 24 hours
+
+20. What role do centrioles play in animal cell mitosis?
+    a) They synthesize DNA
+    b) They form spindle fibers
+    c) They build the cell plate
+    d) They condense chromosomes
+
+21. What is the primary outcome of meiosis?
+    a) Two identical diploid cells
+    b) Four haploid cells with unique genetics
+    c) One diploid cell
+    d) Four identical haploid cells
+
+22. How many nuclear divisions occur in meiosis?
+    a) One
+    b) Two
+    c) Three
+    d) Four
+
+23. During which stage of meiosis does crossing-over occur?
+    a) Prophase I
+    b) Metaphase I
+    c) Anaphase I
+    d) Prophase II
+
+24. What separates during anaphase I of meiosis?
+    a) Sister chromatids
+    b) Homologous chromosomes
+    c) Centrioles
+    d) Spindle fibers
+
+25. What is the ploidy of cells after Meiosis I in a diploid organism?
+    a) Diploid (2N)
+    b) Haploid (1N)
+    c) Triploid (3N)
+    d) Tetraploid (4N)
+
+26. What process in meiosis shuffles genetic material?
+    a) Cytokinesis
+    b) Crossing-over
+    c) Spindle formation
+    d) DNA replication
+
+27. How many chromatids are present in a tetrad during prophase I?
+    a) Two
+    b) Four
+    c) Six
+    d) Eight
+
+28. What happens to DNA replication between Meiosis I and Meiosis II?
+    a) It occurs again
+    b) It does not occur
+    c) It doubles the chromosome number
+    d) It repairs damaged DNA
+
+29. In humans, how many chromosomes are in a cell at the end of meiosis?
+    a) 23
+    b) 46
+    c) 92
+    d) 12
+
+30. What is the purpose of independent assortment in meiosis?
+    a) To increase chromosome number
+    b) To produce identical daughter cells
+    c) To generate genetic diversity
+    d) To repair DNA damage
+
+Answer Key
+1.  b
+2.  b
+3.  b
+4.  b
+5.  b
+6.  c
+7.  a
+8.  a
+9.  b
+10. c
+11. b
+12. b
+13. b
+14. b
+15. c
+16. b
+17. b
+18. b
+19. a
+20. b
+21. b
+22. b
+23. a
+24. b
+25. b
+26. b
+27. b
+28. b
+29. a
+30. c
+` },
+  'L10': { name: "Lab 10: DNA & Genetics", title: "Lab 10: DNA & Genetics", raw: `Lab 10 Questions
+
+1.  DNA is composed of which sugar?
+    a) Ribose
+    b) Deoxyribose
+    c) Glucose
+    d) Fructose
+
+2.  In DNA, adenine pairs with which base?
+    a) Guanine
+    b) Cytosine
+    c) Thymine
+    d) Uracil
+
+3.  DNA strands are held together by:
+    a) Ionic bonds
+    b) Covalent bonds
+    c) Hydrogen bonds
+    d) Peptide bonds
+
+4.  RNA contains which nitrogenous base instead of thymine?
+    a) Cytosine
+    b) Guanine
+    c) Uracil
+    d) Adenine
+
+5.  The enzyme that synthesizes DNA strands is:
+    a) DNA ligase
+    b) DNA polymerase
+    c) RNA polymerase
+    d) Helicase
+
+6.  The leading strand in DNA replication is synthesized:
+    a) Discontinuously
+    b) Continuously
+    c) Randomly
+    d) Not at all
+
+7.  Okazaki fragments are found on which strand?
+    a) Leading strand
+    b) Lagging strand
+    c) RNA strand
+    d) mRNA strand
+
+8.  The Dische test specifically detects:
+    a) Proteins
+    b) RNA
+    c) Deoxyribose
+    d) Ribose
+
+9.  Which type of bond links nucleotides in a DNA strand?
+    a) Peptide bond
+    b) Glycosidic bond
+    c) Phosphodiester bond
+    d) Hydrogen bond
+
+10. The scientist who discovered DNA polymerase was:
+    a) Watson
+    b) Crick
+    c) Kornberg
+    d) Meselson
+
+11. DNA replication is:
+    a) Conservative
+    b) Semi-conservative
+    c) Dispersive
+    d) Random
+
+12. The enzyme that unwinds DNA is:
+    a) Polymerase
+    b) Ligase
+    c) Helicase
+    d) Gyrase
+
+13. Plasmids are found in:
+    a) Viruses
+    b) Eukaryotes
+    c) Bacteria
+    d) Mitochondria
+
+14. The F-factor plasmid carries genes for:
+    a) Antibiotic resistance
+    b) Sex pili formation
+    c) Toxin production
+    d) Energy metabolism
+
+15. R-factor plasmids confer:
+    a) Resistance to antibiotics
+    b) Ribosomal mutations
+    c) Reproductive genes
+    d) Restriction enzymes
+
+16. DNA is measured in units called:
+    a) Daltons
+    b) Base pairs
+    c) Angstroms
+    d) Codons
+
+17. Which of the following bonds is broken first during replication?
+    a) Phosphodiester
+    b) Hydrogen
+    c) Peptide
+    d) Ionic
+
+18. Short tandem repeats (STRs) are used in:
+    a) Protein synthesis
+    b) DNA fingerprinting
+    c) Photosynthesis
+    d) Mutation repair
+
+19. Ethanol is used in DNA isolation to:
+    a) Dissolve DNA
+    b) Precipitate DNA
+    c) Hydrolyze DNA
+    d) Denature proteins
+
+20. The sugar in RNA is:
+    a) Glucose
+    b) Deoxyribose
+    c) Ribose
+    d) Fructose
+
+21. Hydrogen bonds in DNA form between:
+    a) Sugars
+    b) Phosphates
+    c) Bases
+    d) Nucleotides and proteins
+
+22. The structure of DNA was described as a:
+    a) Triple helix
+    b) Ladder
+    c) Double helix
+    d) Coiled coil
+
+23. In DNA polymerization, which bond forms between nucleotides?
+    a) Peptide
+    b) Phosphodiester
+    c) Hydrogen
+    d) Disulfide
+
+24. Human cells contain how many chromosomes?
+    a) 44
+    b) 23
+    c) 46
+    d) 22
+
+25. Which reagent detects DNA in the Dische test?
+    a) Benedict’s reagent
+    b) Biuret reagent
+    c) Dische reagent
+    d) Iodine solution
+
+Answer Key
+1.  b
+2.  c
+3.  c
+4.  c
+5.  b
+6.  b
+7.  b
+8.  c
+9.  c
+10. c
+11. b
+12. c
+13. c
+14. b
+15. a
+16. b
+17. b
+18. b
+19. b
+20. c
+21. c
+22. c
+23. b
+24. c
+25. c
+` },
+
       'l8_9': {
         title: 'Lecture 8-9: Mitosis, Meiosis & Cell Cycle',
         raw: `1. What is one of the three components of the Cell Theory mentioned in the document?
@@ -1096,7 +1489,7 @@ c
     function App() {
       // --- STATE ---
       // Default to L8-9 being checked, but now include all 3 sets
-      const [selectedSets, setSelectedSets] = useState(() => loadSaved("selectedSets", { 'l8_9': true, 'l10': false, 'l11': false }));
+      const [selectedSets, setSelectedSets] = useState(() => loadSaved("selectedSets", { 'l8_9': true, 'l10': false, 'l11': false, 'L9': false, 'L10': false }));
       const [answers, setAnswers] = useState(() => loadSaved("answers", {}));
       const [revealed, setRevealed] = useState(() => loadSaved("revealed", {}));
       
@@ -1108,28 +1501,22 @@ c
 
       // --- PARSING LOGIC ---
       const combinedData = useMemo(() => {
-        let questionText = [];
-        let keyText = [];
-
+        const questions = [];
         Object.keys(selectedSets).forEach(key => {
-          if (selectedSets[key] && DATA_SETS[key]) {
-            const raw = DATA_SETS[key].raw;
-            const parts = raw.split(/\s*Answer Key\s*\n/);
-            questionText.push(parts[0] || "");
-            if (parts[1]) {
-              keyText.push(parts[1]);
+            if (selectedSets[key] && DATA_SETS[key]) {
+            try {
+                const parsed = parseQuestions(DATA_SETS[key].raw);
+                if (parsed && Array.isArray(parsed.questions) && parsed.questions.length) {
+                // Add the set key to each question for potential debugging
+                questions.push(...parsed.questions.map(q => ({ ...q, _set: key })));
+                }
+            } catch (e) {
+                console.error("Parse failed for set", key, e);
             }
-          }
+            }
         });
-
-        // Re-combine for the single parser function
-        const combinedRaw = questionText.join('\n\n') + 
-                            '\n\nAnswer Key\n' + 
-                            keyText.join('\n');
-        
-        const parsedResult = parseQuestions(combinedRaw);
-        return parsedResult;
-      }, [selectedSets]);
+        return { questions };
+        }, [selectedSets]);
 
       // --- EFFECTS ---
       
@@ -1508,7 +1895,7 @@ c
 
     // =================== Parser & Helpers ===================
     
-    // --- FINAL ROBUST PARSER ---
+    // --- FINAL ROBUST PARSER (FIXED 2025-11-08) ---
     function parseQuestions(raw) {
       const cleanRaw = raw
         .replace(/\r\n/g, "\n")
@@ -1527,22 +1914,24 @@ c
 
       const key = new Map();
       if (keyText) {
-          // Robustly handle sequential answers, whether listed as 'a', '1. a', or just 'a'
           let sequentialIndex = 1;
           keyText.split(/\n+/).forEach(line => {
              const trimmedLine = line.trim();
-             // Match format like: '1. b', '23. c', or just 'b' (if sequential)
-             const match = trimmedLine.match(/^(\d+)\.\s*([a-d])/i) || trimmedLine.match(/^([a-d])$/i);
+             // Match format like: '1. b', '23. c', or just 'b'
+             const match = trimmedLine.match(/^(\d+)\s*\.\s*([a-d])/i) || trimmedLine.match(/^([a-d])$/i);
              
              if (match) {
                  const answerLetter = match[match.length - 1].toLowerCase();
-                 // If it matched the numbered format (match[1] is the number)
+                 let qNum;
+                 
+                 // If it matched the numbered format (e.g., "1. b")
                  if (match[1] && !isNaN(parseInt(match[1]))) {
-                     key.set(parseInt(match[1]), answerLetter);
+                     qNum = parseInt(match[1]);
                  } else {
-                     // Assume sequential numbering if no number is matched
-                     key.set(sequentialIndex, answerLetter);
+                     // Otherwise, use sequential index
+                     qNum = sequentialIndex;
                  }
+                 key.set(qNum, answerLetter);
                  sequentialIndex++;
              }
           });
@@ -1553,16 +1942,16 @@ c
       
       const questions = [];
 
-      // Regex to find "o a)", "o b)", "o c)", or "o d)"
-      const optionMarkerRegex = /\s*o\s+([a-d])\)/i; // 'i' insensitive
+      // Regex to find "a)", "o a)", "b)", "o b)", etc.
+      // This makes the "o " prefix optional.
+      const optionMarkerRegex = /\s*(?:o\s+)?([a-d])\)/i; 
 
       for (let block of blocks) {
         block = block.trim();
         if (!block) continue;
 
-        // Strip source tags from the entire block first
-        // FIX: remove any bracketed source tags like 【...】
-        block = block.replace(/【[^】]*】/g, '').trim(); 
+        // Strip source tags
+        block = block.replace(/\/g, '').trim(); 
 
         // Match the question number and the rest of the block content
         const qNumMatch = block.match(/^(\d+)\.\s*(.*)/s); // /s flag to match across newlines
@@ -1584,9 +1973,9 @@ c
             // The rest is the options string
             const optionsString = content.substring(firstOptionIndex);
             
-            // Re-run regex over options string to find all options and their text
-            // Look for "o [a-d])" followed by non-option characters or end of string
-            const fullOptionRegex = /\s*o\s+([a-d])\)\s*(.*?)(?=\s*o\s+[a-d]\)|\s*$)/gis; // Added 's' and 'i' flags
+            // Regex to find all options and their text
+            // Makes "o " optional in the main match AND the lookahead
+            const fullOptionRegex = /\s*(?:o\s+)?([a-d])\)\s*(.*?)(?=\s*(?:o\s+)?([a-d])\)|$)/gis;
             let match;
             
             while ((match = fullOptionRegex.exec(optionsString)) !== null) {
@@ -1601,7 +1990,6 @@ c
         }
 
         if (promptText && options.length >= 2) {
-            // Re-sort options by key (a, b, c, d)
             options.sort((a, b) => a.key.localeCompare(b.key));
             
             questions.push({
@@ -1613,10 +2001,8 @@ c
         }
       }
 
-      // Final numerical sort for display order consistency
-      // This is now redundant since we parse by number, but good to keep
-      questions.sort((a, b) => a.number - b.number);
-
+      // We re-key the questions by their array index for the app's logic,
+      // but preserve the original number for display.
       return { questions };
     }
     // --- END FINAL ROBUST PARSER ---
@@ -1636,7 +2022,7 @@ c
     }
     function loadSaved(k, fallback) {
       try { 
-          const s = localStorage.getItem("quiz_" + k); 
+          const s = localStorage.getItem("quiz_"_ + k); 
           if (s && s !== 'undefined' && s !== 'null') {
               return JSON.parse(s);
           }
