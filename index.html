@@ -1497,6 +1497,8 @@ c
 
       const [shuffle, setShuffle] = useState(() => loadSaved("shuffle", true));
       const [shuffleOptions, setShuffleOptions] = useState(() => loadSaved("shuffleOptions", false));
+      const [autoAdvance, setAutoAdvance] = useState(() => loadSaved("autoAdvance", false));
+      const [darkMode, setDarkMode] = useState(() => loadSaved("darkMode", false));
       const [currentIndex, setCurrentIndex] = useState(0);
 
       // --- PARSING LOGIC ---
@@ -1538,57 +1540,56 @@ c
       useEffect(() => save("revealed", revealed), [revealed]);
       useEffect(() => save("shuffle", shuffle), [shuffle]);
       useEffect(() => save("shuffleOptions", shuffleOptions), [shuffleOptions]);
+      useEffect(() => save("autoAdvance", autoAdvance), [autoAdvance]);
+      useEffect(() => save("darkMode", darkMode), [darkMode]);
 
+
+      
       // --- RENDER LOGIC ---
-
-      if (!combinedData.questions.length) {
-        return (
-          <Wrap>
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start">
-              <Card>
-                <Header title="BMCC - BIO 210 Review Repo" subtitle="Biology Questions" />
-                <p>No questions loaded. Please select one or more quiz sets from the sidebar.</p>
-              </Card>
-              <aside className="space-y-6">
-                <SetSelector
-                  selectedSets={selectedSets}
-                  setSelectedSets={setSelectedSets}
-                  setAnswers={setAnswers}
-                  setRevealed={setRevealed}
-                />
-              </aside>
-            </div>
-            <Footer />
-            <style>{styles}</style>
-          </Wrap>
-        );
-      }
+      const hasQuestions = combinedData.questions.length > 0;
 
       const total = combinedData.questions.length;
-      const qIndex = shuffledOrder[currentIndex] ?? 0;
-      const q = combinedData.questions[qIndex];
-      const value = answers[qIndex];
-      const isCorrect = value && q && value === q.correct;
-      const shown = !!revealed[qIndex];
+      const qIndex = hasQuestions ? (shuffledOrder[currentIndex] ?? 0) : 0;
+      const q = hasQuestions ? combinedData.questions[qIndex] : null;
+      const value = hasQuestions ? answers[qIndex] : undefined;
+      const isCorrect = hasQuestions && value && q && value === q.correct;
+      const shown = hasQuestions ? !!revealed[qIndex] : false;
+
+      useEffect(() => {
+        if (!autoAdvance || !hasQuestions || !shown) return;
+        if (currentIndex >= total - 1) return;
+        const t = setTimeout(() => {
+          setCurrentIndex(i => Math.min(i + 1, total - 1));
+        }, 2000);
+        return () => clearTimeout(t);
+      }, [autoAdvance, hasQuestions, shown, currentIndex, total]);
 
       const displayedOptions = useMemo(() => {
-        if (!q || !q.options) return [];
+        if (!hasQuestions || !q || !q.options) return [];
         return shuffleOptions ? shuffleArray([...q.options]) : q.options;
-      }, [q, shuffleOptions]);
+      }, [hasQuestions, q, shuffleOptions]);
 
       // --- HANDLERS ---
-      const goNext = () => setCurrentIndex(i => Math.min(i + 1, total - 1));
-      const goPrev = () => setCurrentIndex(i => Math.max(i - 1, 0));
-      const goTo = (i) => setCurrentIndex(Math.min(Math.max(0, i), total - 1));
+      const goNext = () => {
+        if (!hasQuestions) return;
+        setCurrentIndex(i => Math.min(i + 1, total - 1));
+      };
+      const goPrev = () => {
+        if (!hasQuestions) return;
+        setCurrentIndex(i => Math.max(i - 1, 0));
+      };
+      const goTo = (i) => {
+        if (!hasQuestions) return;
+        setCurrentIndex(Math.min(Math.max(0, i), total - 1));
+      };
 
       const onSubmit = () => {
-        if (value) {
-          setRevealed(r => ({ ...r, [qIndex]: true }));
-        }
+        if (!hasQuestions || !value) return;
+        setRevealed(r => ({ ...r, [qIndex]: true }));
       };
 
       const onSelect = (opt) => {
-        if (shown) return; 
+        if (!hasQuestions || shown) return;
         setAnswers(a => ({ ...a, [qIndex]: opt }));
       };
 
@@ -1596,45 +1597,30 @@ c
         setAnswers({});
         setRevealed({});
         setCurrentIndex(0);
+        if (!hasQuestions) {
+          setShuffledOrder([]);
+          return;
+        }
         const base = [...Array(combinedData.questions.length).keys()];
         const order = shuffle ? shuffleArray(base) : base;
         setShuffledOrder(order);
       };
-      
+
       const handleShuffleToggle = () => {
         setShuffle(s => !s);
       };
-      
+
       const summary = computeSummary(combinedData.questions, answers);
 
-      if (!q) {
-         return (
-          <Wrap>
-             <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start">
-               <Card>
-                  <Header title="BMCC - BIO 210 Review Repo" subtitle="Loading Questions..." />
-                  <p className="text-red-600">Error loading question {currentIndex + 1}. Please try resetting or selecting different sets.</p>
-               </Card>
-                <aside className="space-y-6">
-                 <SetSelector
-                    selectedSets={selectedSets}
-                    setSelectedSets={setSelectedSets}
-                    setAnswers={setAnswers}
-                    setRevealed={setRevealed}
-                 />
-                 <Card><h3 className="font-semibold">Progress</h3><p>...</p></Card>
-                 <Card><h3 className="font-semibold">Summary</h3><p>...</p></Card>
-               </aside>
-            </div>
-            <Footer />
-            <style>{styles}</style>
-          </Wrap>
-        );
-      }
-
-      // --- MAIN RENDER ---
+      const correctDisplayKey = (() => {
+        if (!hasQuestions || !q || !displayedOptions.length) return q?.correct?.toUpperCase();
+        const idx = displayedOptions.findIndex(o => o.key === q.correct);
+        if (idx === -1) return q?.correct?.toUpperCase();
+        return String.fromCharCode(65 + idx); // A, B, C...
+      })();
+// --- MAIN RENDER ---
       return (
-        <Wrap>
+        <Wrap darkMode={darkMode}>
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start">
             <Card>
               <Header
@@ -1647,6 +1633,8 @@ c
                 <button className="btn" onClick={() => setShuffleOptions(s => !s)}>Shuffle Answers: {shuffleOptions ? "On" : "Off"}</button>
                 <button className="btn" onClick={handleReset}>Reset Progress</button>
                 <button className="btn" onClick={() => downloadState(combinedData.questions, answers)}>Download results</button>
+                              <button className="btn" onClick={() => setAutoAdvance(s => !s)}>Auto advance: {autoAdvance ? "On" : "Off"}</button>
+                <button className="btn" onClick={() => setDarkMode(s => !s)}>Dark mode: {darkMode ? "On" : "Off"}</button>
               </Toolbar>
 
               <hr className="my-4" />
@@ -1656,12 +1644,13 @@ c
                 <span className="pill">Answered {summary.answered}/{total}</span> 
               </div>
 
-              <h2 className="text-xl font-semibold leading-tight mb-3">{q?.prompt || 'Loading prompt...'}</h2>
+              <h2 className="text-xl font-semibold leading-tight mb-3">{q?.prompt || 'Select a Quiz Set to View Questions'}</h2>
 
               <div role="radiogroup" aria-label={`Choices for question ${currentIndex + 1}`} className="space-y-2">
-                {(displayedOptions || []).map(opt => {
-                  const id = `q${qIndex}_${opt.key}`;
-                  const selected = value === opt.key;
+                {(displayedOptions || []).map((opt, idx) => {
+                  const displayKey = String.fromCharCode(97 + idx); // a, b, c...
+                  const id = `q${qIndex}_${displayKey}`;
+                  const selected = value === opt.key; // value stores underlying key
                   const correct = q?.correct === opt.key;
                   const showFeedback = shown && (selected || correct);
                   return (
@@ -1674,7 +1663,7 @@ c
                         onChange={() => onSelect(opt.key)}
                         disabled={shown}
                       />
-                      <span className="key">{opt.key.toUpperCase()}</span>
+                      <span className="key">{displayKey.toUpperCase()}</span>
                       <span>{opt.text}</span>
                     </label>
                   );
@@ -1691,7 +1680,7 @@ c
                 <div className={`mt-4 p-3 rounded-lg ${isCorrect ? "bg-emerald-50 border border-emerald-200" : "bg-rose-50 border border-rose-200"}`}>
                   <div className="font-medium mb-1">{isCorrect ? "Correct 👍" : "Incorrect 👎"}</div>
                   {!isCorrect && (
-                    <div className="text-sm mb-1">The correct answer is <span className="font-semibold">{q.correct?.toUpperCase()}</span> — {getOptionText(q, q.correct)}</div>
+                    <div className="text-sm mb-1">The correct answer is <span className="font-semibold">{correctDisplayKey}</span> — {getOptionText(q, q.correct)}</div>
                   )}
                 </div>
               )}
@@ -1763,9 +1752,12 @@ c
     }
 
     // =================== Components ===================
-    function Wrap({ children }) {
+    function Wrap({ children, darkMode }) {
+      const rootClass = darkMode
+        ? "dark-mode min-h-screen bg-slate-900 text-slate-50"
+        : "min-h-screen bg-slate-50 text-slate-900";
       return (
-        <div className="min-h-screen bg-slate-50 text-slate-900">
+        <div className={rootClass}>
           <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 space-y-6">{children}</div>
         </div>
       );
@@ -1782,7 +1774,7 @@ c
 
     function Card({ children }) {
       return (
-        <section className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6">{children}</section>
+        <section className="card">{children}</section>
       );
     }
     
@@ -1895,9 +1887,14 @@ c
 
     // =================== Parser & Helpers ===================
     
-    // --- FINAL ROBUST PARSER (FIXED 2025-11-08) ---
+    
+// --- SIMPLE STABLE PARSER (REPLACED 2025-11-13) ---
     function parseQuestions(raw) {
-      const cleanRaw = raw
+      if (!raw) {
+        return { questions: [] };
+      }
+
+      const cleanRaw = String(raw)
         .replace(/\r\n/g, "\n")
         .replace(/\r/g, "\n")
         .replace(/[\u2018\u2019]/g, "'")
@@ -1907,105 +1904,95 @@ c
         .replace(/\u2026/g, '...')
         .replace(/[\u00A0\u200B\u202F\uFEFF]/g, " ");
 
-      // Split body from answer key
-      const parts = cleanRaw.split(/\s*Answer Key\s*\n/);
-      const body = parts[0] || "";
-      const keyText = parts[1] || "";
+      const splitMatch = cleanRaw.split(/Answer Key/i);
+      const body = splitMatch[0] || "";
+      const keyPartRaw = splitMatch[1] || "";
 
-      const key = new Map();
-      if (keyText) {
-          let sequentialIndex = 1;
-          keyText.split(/\n+/).forEach(line => {
-             const trimmedLine = line.trim();
-             // Match format like: '1. b', '23. c', or just 'b'
-             const match = trimmedLine.match(/^(\d+)\s*\.\s*([a-d])/i) || trimmedLine.match(/^([a-d])$/i);
-             
-             if (match) {
-                 const answerLetter = match[match.length - 1].toLowerCase();
-                 let qNum;
-                 
-                 // If it matched the numbered format (e.g., "1. b")
-                 if (match[1] && !isNaN(parseInt(match[1]))) {
-                     qNum = parseInt(match[1]);
-                 } else {
-                     // Otherwise, use sequential index
-                     qNum = sequentialIndex;
-                 }
-                 key.set(qNum, answerLetter);
-                 sequentialIndex++;
-             }
-          });
-      }
+      const answerMap = new Map();
+      let seq = 1;
+      keyPartRaw
+        .split(/\n+/)
+        .map(line => line.trim())
+        .filter(Boolean)
+        .forEach(line => {
+          let m = line.match(/^(\d+)\s*\.\s*([a-d])/i);
+          let qNum;
+          let ans;
+          if (m) {
+            qNum = parseInt(m[1], 10);
+            ans = m[2].toLowerCase();
+          } else {
+            m = line.match(/^([a-d])$/i);
+            if (m) {
+              qNum = seq;
+              ans = m[1].toLowerCase();
+            }
+          }
+          if (ans) {
+            answerMap.set(qNum, ans);
+            seq++;
+          }
+        });
 
-      // Split into potential question blocks using the question number pattern
-      const blocks = body.split(/\n\s*(?=\d+\.)/);
-      
+      const blocks = body.split(/\n\s*(?=\d+\.\s)/);
       const questions = [];
 
-      // Regex to find "a)", "o a)", "b)", "o b)", etc.
-      // This makes the "o " prefix optional.
-      const optionMarkerRegex = /\s*(?:o\s+)?([a-d])\)/i; 
+      const optionLineRegex = /^\s*(?:o\s+)?([a-d])\)\s*(.*)$/i;
 
-      for (let block of blocks) {
-        block = block.trim();
-        if (!block) continue;
+      blocks.forEach(blockRaw => {
+        const block = blockRaw.trim();
+        if (!block) return;
 
-        // Strip source tags
-        block = block.replace(/\/g, '').trim(); 
+        const headerMatch = block.match(/^(\d+)\.\s*(.*)$/s);
+        if (!headerMatch) return;
 
-        // Match the question number and the rest of the block content
-        const qNumMatch = block.match(/^(\d+)\.\s*(.*)/s); // /s flag to match across newlines
-        if (!qNumMatch) continue;
+        const qNum = parseInt(headerMatch[1], 10);
+        const rest = headerMatch[2];
 
-        const qNum = parseInt(qNumMatch[1], 10);
-        let content = qNumMatch[2].trim();
-        
-        let promptText = '';
-        const options = [];
+        const lines = String(rest).split("\n");
+        const promptLines = [];
+        let options = [];
 
-        // Find the index of the first option marker
-        const firstOptionIndex = content.search(optionMarkerRegex);
-
-        if (firstOptionIndex !== -1) {
-            // The text before the first option marker is the prompt
-            promptText = content.substring(0, firstOptionIndex).trim();
-            
-            // The rest is the options string
-            const optionsString = content.substring(firstOptionIndex);
-            
-            // Regex to find all options and their text
-            // Makes "o " optional in the main match AND the lookahead
-            const fullOptionRegex = /\s*(?:o\s+)?([a-d])\)\s*(.*?)(?=\s*(?:o\s+)?([a-d])\)|$)/gis;
-            let match;
-            
-            while ((match = fullOptionRegex.exec(optionsString)) !== null) {
-                options.push({
-                    key: match[1].toLowerCase(),
-                    text: match[2].trim()
-                });
-            }
-        } else {
-            // If no options found, the whole block content is the prompt
-            promptText = content;
-        }
-
-        if (promptText && options.length >= 2) {
-            options.sort((a, b) => a.key.localeCompare(b.key));
-            
-            questions.push({
-                number: qNum,
-                prompt: promptText,
-                options: options,
-                correct: key.get(qNum) || ''
+        lines.forEach(line => {
+          const optMatch = line.match(optionLineRegex);
+          if (optMatch) {
+            options.push({
+              key: optMatch[1].toLowerCase(),
+              text: optMatch[2].trim()
             });
-        }
-      }
+          } else {
+            if (options.length === 0) {
+              if (line.trim()) {
+                promptLines.push(line.trim());
+              }
+            } else if (options.length > 0 && line.trim()) {
+              options[options.length - 1].text += " " + line.trim();
+            }
+          }
+        });
 
-      // We re-key the questions by their array index for the app's logic,
-      // but preserve the original number for display.
+        const prompt = promptLines.join(" ").trim();
+        if (!prompt || options.length < 2) return;
+
+        const seen = new Set();
+        options = options.filter(o => {
+          if (!o.key || seen.has(o.key)) return false;
+          seen.add(o.key);
+          return true;
+        }).sort((a, b) => a.key.localeCompare(b.key));
+
+        questions.push({
+          number: qNum,
+          prompt,
+          options,
+          correct: answerMap.get(qNum) || ""
+        });
+      });
+
       return { questions };
     }
-    // --- END FINAL ROBUST PARSER ---
+// --- END SIMPLE STABLE PARSER ---
+
 
 
     function shuffleArray(arr) {
@@ -2022,7 +2009,7 @@ c
     }
     function loadSaved(k, fallback) {
       try { 
-          const s = localStorage.getItem("quiz_"_ + k); 
+          const s = localStorage.getItem("quiz_" + k); 
           if (s && s !== 'undefined' && s !== 'null') {
               return JSON.parse(s);
           }
@@ -2156,6 +2143,74 @@ c
     .tiny { width:2rem; height:2rem; border-radius:.5rem; border:1px solid #cbd5e1; font-weight:600; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; transition: background-color 0.1s, border-color 0.1s; }
     .tiny:hover:not(.ring-2) { background-color: #e2e8f0; }
     .tiny.ring-2 { border-color: #60a5fa; }
+
+    .card {
+      background:#ffffff;
+      border-radius:1rem;
+      box-shadow:0 1px 2px rgba(15,23,42,0.06);
+      border:1px solid #e2e8f0;
+      padding:1rem 1.5rem;
+    }
+    .dark-mode {
+      background-color:#020617;
+      color:#e5e7eb;
+    }
+    .dark-mode .card {
+      background:#020617;
+      border-color:#334155;
+      color:#e5e7eb;
+    }
+    .dark-mode .btn {
+      background:#020617;
+      border-color:#4b5563;
+      color:#e5e7eb;
+    }
+    .dark-mode .btn:hover:not(:disabled) {
+      background:#111827;
+      border-color:#e5e7eb;
+    }
+    .dark-mode .btn.primary {
+      background:#2563eb;
+      border-color:#1d4ed8;
+      color:#f9fafb;
+    }
+    .dark-mode .btn.primary:hover:not(:disabled) {
+      background:#1d4ed8;
+      border-color:#1e40af;
+    }
+    .dark-mode .choice {
+      border-color:#334155;
+      background:#020617;
+    }
+    .dark-mode .choice:hover {
+      background-color:#020617;
+      border-color:#64748b;
+    }
+    .dark-mode .choice.selected {
+      background:#020617;
+      border-color:#93c5fd;
+    }
+    .dark-mode .choice.correct {
+      background:#064e3b;
+      border-color:#34d399;
+    }
+    .dark-mode .choice.wrong {
+      background:#7f1d1d;
+      border-color:#fca5a5;
+    }
+    .dark-mode .pill {
+      background:#020617;
+      border-color:#334155;
+      color:#e5e7eb;
+    }
+    .dark-mode .tiny {
+      background:#020617;
+      border-color:#1f2937;
+      color:#e5e7eb;
+    }
+    .dark-mode .tiny.ring-2 {
+      border-color:#93c5fd;
+    }
     `;
 
 
